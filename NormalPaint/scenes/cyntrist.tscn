@@ -1,16 +1,29 @@
 [gd_scene format=3 uid="uid://snsbbs1mjfx3"]
 
 [ext_resource type="Script" uid="uid://ccbp77048k4x2" path="res://scripts/camera_movement.gd" id="1_hox4a"]
+[ext_resource type="Material" uid="uid://ceu1jg37qxylh" path="res://materials/normal_material.tres" id="1_rib1n"]
+
+[sub_resource type="TorusMesh" id="TorusMesh_5c66o"]
+material = ExtResource("1_rib1n")
 
 [node name="Cyntrist" type="Node3D" unique_id=815276944]
 
 [node name="Geometría" type="Node3D" parent="." unique_id=1189026551]
 
 [node name="CSGBox3D" type="CSGBox3D" parent="Geometría" unique_id=897116281]
+material = ExtResource("1_rib1n")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Geometría" unique_id=1724261099]
-transform = Transform3D(0.70710677, -0.49999997, 0.49999997, 0, 0.70710677, 0.70710677, -0.70710677, -0.49999997, 0.49999997, 0, 0, 0)
+transform = Transform3D(-0.30081457, 0.12996691, -0.9447851, 0.2776174, 0.9597007, 0.043626793, 0.91238105, -0.2491651, -0.32477388, -2.9567723, 0, 0)
+
+[node name="CSGSphere3D" type="CSGSphere3D" parent="Geometría" unique_id=1052334896]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.478618)
+material = ExtResource("1_rib1n")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1057172272]
 transform = Transform3D(0.7071068, -0.4055798, 0.579228, 0, 0.81915206, 0.57357645, -0.7071068, -0.4055798, 0.579228, 2, 2, 2)
 script = ExtResource("1_hox4a")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1115010403]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.013890445, 0, 3.071035)
+mesh = SubResource("TorusMesh_5c66o")
