@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://snsbbs1mjfx3"]
+
+[ext_resource type="Script" uid="uid://ccbp77048k4x2" path="res://scripts/camera_movement.gd" id="1_hox4a"]
+
+[node name="Cyntrist" type="Node3D" unique_id=815276944]
+
+[node name="Geometría" type="Node3D" parent="." unique_id=1189026551]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Geometría" unique_id=897116281]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Geometría" unique_id=1724261099]
+transform = Transform3D(0.70710677, -0.49999997, 0.49999997, 0, 0.70710677, 0.70710677, -0.70710677, -0.49999997, 0.49999997, 0, 0, 0)
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1057172272]
+transform = Transform3D(0.7071068, -0.4055798, 0.579228, 0, 0.81915206, 0.57357645, -0.7071068, -0.4055798, 0.579228, 2, 2, 2)
+script = ExtResource("1_hox4a")
