@@ -12,9 +12,11 @@ extends Node3D
 @export_range(0.001, 0.1, 0.001) var look_sensitivity: float = 0.002
 @export_range(0.001, 0.1, 0.01) var pan_sensitivity: float = 0.01
 @export_range(0.001, 0.1, 0.001) var orbit_sensitivity: float = 0.004
-@export_group("Rotación")
-@export_range(-90, 0, 1) var min_pitch_degrees: float = -90.0
-@export_range(0, 90, 1) var max_pitch_degrees: float = 90.0
+@export_range(0.01, 10.0, 0.01) var min_orbit_distance: float = 0.25
+@export_range(0.01, 3.0, 0.1) var wheel_zoom_step: float = 0.25
+@export_group("Rotation")
+@export_range(-89.0, 0.0, 1.0) var min_pitch_degrees: float = -89.0
+@export_range(0.0, 89.0, 1.0) var max_pitch_degrees: float = 89.0
 @export var orbit_target: Vector3 = Vector3.ZERO
 
 var _velocity: Vector3 = Vector3.ZERO
@@ -38,6 +40,14 @@ func _input(event: InputEvent) -> void:
 				_pan(event.relative)
 			else:
 				_orbit(event.relative)
+
+	if event is InputEventMouseButton and event.pressed:
+		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+			_zoom_towards_target(1.0)
+			return
+		if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+			_zoom_towards_target(-1.0)
+			return
 
 func _rotate(mouse_delta: Vector2) -> void:
 	rotation.y -= mouse_delta.x * look_sensitivity
@@ -80,6 +90,16 @@ func _target_origin() -> void:
 	orbit_target = Vector3.ZERO
 	look_at(orbit_target, Vector3.UP)
 	_pitch = rotation.x
+
+func _zoom_towards_target(direction: float) -> void:
+	var forward := -global_transform.basis.z.normalized()
+	var next_position := global_position + forward * (direction * wheel_zoom_step)
+	var next_distance := next_position.distance_to(orbit_target)
+
+	if next_distance < min_orbit_distance:
+		global_position = orbit_target - forward * max(min_orbit_distance, 0.001)
+	else:
+		global_position = next_position
 
 func _process(delta: float) -> void:
 	var local_direction := Vector3.ZERO
