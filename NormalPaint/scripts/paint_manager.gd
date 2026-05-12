@@ -1,0 +1,36 @@
+extends Node3D
+
+@export var camera : Camera3D 
+@export var ray_length: float = 10000.0
+
+func _ready() -> void:
+	if camera == null:
+		print_debug("NO HAY CÁMARA VÁLIDA ASIGNADA, ESCOGIENDO CÁMARA PRINCIPAL")
+		camera = get_viewport().get_camera_3d()
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		_raycast_uv(event.position)
+
+func _raycast_uv(mouse_position: Vector2) -> void:
+	if camera == null: 
+		print_debug("NO HAY CÁMARA VÁLIDA DESDE LA QUE HACER RAYCAST")
+		return
+
+	var origin: Vector3 = camera.project_ray_origin(mouse_position)
+	var direction: Vector3 = camera.project_ray_normal(mouse_position)
+	var to: Vector3 = origin + direction * ray_length
+
+	var query := PhysicsRayQueryParameters3D.create(origin, to)
+	var hit := get_world_3d().direct_space_state.intersect_ray(query)
+	if hit.is_empty(): 
+		print_debug("no se colisionó con nada")
+		return
+
+	var uv_value : Variant = hit.get("uv", null)
+	if uv_value is Vector2:
+		var hit_uv: Vector2 = uv_value
+		print_debug("raycast UV: ", hit_uv)
+	else:
+		print_debug("raycast: colision sin UV en ", hit.collider)
+
