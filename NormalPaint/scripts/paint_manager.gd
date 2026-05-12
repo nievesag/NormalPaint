@@ -8,9 +8,9 @@ func _ready() -> void:
 		print_debug("NO HAY CÁMARA VÁLIDA ASIGNADA, ESCOGIENDO CÁMARA PRINCIPAL")
 		camera = get_viewport().get_camera_3d()
 
-func _input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-		_raycast_uv(event.position)
+func _process(_delta: float) -> void:
+	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+		_raycast_uv(get_viewport().get_mouse_position())
 
 func _raycast_uv(mouse_position: Vector2) -> void:
 	if camera == null: 
@@ -33,4 +33,3 @@ func _raycast_uv(mouse_position: Vector2) -> void:
 		print_debug("raycast UV: ", hit_uv)
 	else:
 		print_debug("raycast sin UV: ", hit.collider)
-
