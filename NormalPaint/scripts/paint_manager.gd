@@ -1,7 +1,7 @@
 extends Node3D
 
 @export var camera : Camera3D 
-@export var ray_length: float = 10000.0
+@export_range(0.1, 10000.0, 0.1) var ray_length: float = 10000.0
 
 func _ready() -> void:
 	if camera == null:
@@ -27,10 +27,10 @@ func _raycast_uv(mouse_position: Vector2) -> void:
 		print_debug("no se colisionó con nada")
 		return
 
-	var uv_value : Variant = hit.get("uv", null)
+	var uv_value : Variant = hit.get("uv")
 	if uv_value is Vector2:
 		var hit_uv: Vector2 = uv_value
 		print_debug("raycast UV: ", hit_uv)
 	else:
-		print_debug("raycast: colision sin UV en ", hit.collider)
+		print_debug("raycast sin UV: ", hit.collider)
 
