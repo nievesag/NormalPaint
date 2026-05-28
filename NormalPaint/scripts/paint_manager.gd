@@ -26,10 +26,4 @@ func _raycast_uv(mouse_position: Vector2) -> void:
 	if hit.is_empty(): 
 		print_debug("no se colisionó con nada")
 		return
-
-	var uv_value : Variant = hit.get("uv")
-	if uv_value is Vector2:
-		var hit_uv: Vector2 = uv_value
-		print_debug("raycast UV: ", hit_uv)
-	else:
-		print_debug("raycast sin UV: ", hit.collider)
+	print_debug("hitazo")
