@@ -5,3 +5,4 @@
 [resource]
 render_priority = 0
 shader = ExtResource("1_asos2")
+shader_parameter/debug_view = true

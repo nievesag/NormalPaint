@@ -4,3 +4,4 @@
 
 [resource]
 albedo_texture = ExtResource("1_8bba2")
+normal_enabled = true
