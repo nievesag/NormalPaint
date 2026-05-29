@@ -50,3 +50,11 @@ transform = Transform3D(-0.30081457, 0.12996696, -0.9447853, 0.2776174, 0.959700
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1057172272]
 transform = Transform3D(0.7071068, -0.4055798, 0.579228, 0, 0.81915206, 0.57357645, -0.7071068, -0.4055798, 0.579228, 2, 2, 2)
 script = ExtResource("1_hox4a")
+
+[node name="ColorPickerButton" type="ColorPickerButton" parent="." unique_id=699014604]
+anchors_preset = -1
+offset_right = 111.0
+offset_bottom = 33.0
+text = "Color Picker"
+icon_alignment = 1
+color = Color(0.80561507, 0.36098176, 0.518984, 1)
