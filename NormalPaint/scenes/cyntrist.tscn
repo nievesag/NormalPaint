@@ -16,9 +16,10 @@ data = PackedVector3Array(-0.049, 0, -0.4976, 0, 0.0488, -0.50479996, 0, 0, -0.5
 
 [node name="Managers" type="Node3D" parent="." unique_id=723519600]
 
-[node name="PaintManager" type="Node3D" parent="Managers" unique_id=1357153141 node_paths=PackedStringArray("camera")]
+[node name="PaintManager" type="Node3D" parent="Managers" unique_id=1357153141 node_paths=PackedStringArray("camera", "_mesh")]
 script = ExtResource("3_13p4k")
 camera = NodePath("../../Camera3D")
+_mesh = NodePath("../../Geometría/Meshes/StaticBody3D/MeshInstance3D")
 
 [node name="ShaderManager" type="Node3D" parent="Managers" unique_id=925348982 node_paths=PackedStringArray("subject")]
 script = ExtResource("2_k55y0")
@@ -34,7 +35,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3.035)
 [node name="Meshes" type="Node3D" parent="Geometría" unique_id=1697844024]
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Geometría/Meshes" unique_id=610604833]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.013890445, 0, 3.071035)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.013890445, 0, 4.127577)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Geometría/Meshes/StaticBody3D" unique_id=1115010403]
 mesh = SubResource("TorusMesh_5c66o")
