@@ -3,13 +3,13 @@ extends Node3D
 @export var camera : Camera3D 
 @export_range(0.1, 10000.0, 0.1) var ray_length: float = 10000.0
 
-@export var _mesh : MeshInstance3D
+@export var _meshInstance : MeshInstance3D
 
 var mdt: MeshDataTool
 
 var _numFaces := 0 # numero de caras triangulares de la mesh
-var _worldNormals := PackedVector3Array() # array de las normales
-var _worldVertices := [] # array de los vertices en el mundo
+var _worldNormals := PackedVector3Array() # array de las normales de cada cara
+var _worldVertices := [] # array de posiciones de vertices en el mundo
 var _localFaceVertices := [] # array de los vertices locales a la mesh
 
 func _ready() -> void:
@@ -17,12 +17,12 @@ func _ready() -> void:
 		print_debug("NO HAY CÁMARA VÁLIDA ASIGNADA, ESCOGIENDO CÁMARA PRINCIPAL")
 		camera = get_viewport().get_camera_3d()
 		
-	if _mesh == null:
+	if _meshInstance == null:
 		print_debug("NO HAY MESHINSTANCE3D VÁLIDA ASIGNADA")
 		return
-		
+	
 	mdt = MeshDataTool.new()
-	var mesh = _mesh.mesh
+	var mesh: Mesh = _meshInstance.mesh
 	
 	if mesh == null:
 		print_debug("LA MESH DE LA MESHINSTANCE3D NO ES VÁLIDA")
@@ -34,10 +34,10 @@ func _ready() -> void:
 	
 	mdt.create_from_surface(arrMesh, 0) # rellena la info del meshdatatool con la data de la mesh especificada
 	_numFaces = mdt.get_vertex_count()
-	_worldNormals.resize(_numFaces)
+	_worldNormals.resize(_numFaces) # mismo numero de normales que de caras
 	
 	for i in range(_numFaces):
-		_worldNormals[i] = to_global(mdt.get_face_normal(i))
+		_worldNormals[i] = to_global(mdt.get_face_normal(i)) # calcula la normal de cada cara
 		
 		# los vertices para cada indice de una cara triangular
 		# i0 ---- i1
@@ -49,7 +49,7 @@ func _ready() -> void:
 		var i1: int = mdt.get_face_vertex(i, 1)
 		var i2: int = mdt.get_face_vertex(i, 2)
 		
-		_localFaceVertices.push_back([i0, i1, i2])		
+		_localFaceVertices.push_back([i0, i1, i2])
 		
 		_worldVertices.push_back([
 			to_global((mdt.get_vertex(i0))),
@@ -66,7 +66,7 @@ func _cart2bary(p : Vector3, a : Vector3, b : Vector3, c: Vector3) -> Vector3:
 
 	var v0 := b - a
 	var v1 := c - a
-	var v2 := p - a
+	#var v2 := p - a
 	
 	var pb := b - p
 	var pc := c - p
@@ -80,7 +80,7 @@ func _cart2bary(p : Vector3, a : Vector3, b : Vector3, c: Vector3) -> Vector3:
 	var beta: float = (pc.dot(pa) / 2 * area)
 	var gamma: float = 1.0 - alfa - beta
 	
-	var sum = alfa + beta + gamma
+	var sum: float = alfa + beta + gamma
 	print_debug(sum)
 	print_debug("peter: ", alfa, " ", beta, " ", gamma)
 	
@@ -133,20 +133,20 @@ func _is_point_in_triangle(point, v1, v2, v3) -> Vector3:
 	
 	return Vector3()
 
-func _get_face(point, normal, epsilon = 0.2) -> Array:
+func _get_face_info(point, normal, epsilon = 0.2) -> Array:
 	for i in range(_numFaces):
 		var world_normal: Vector3 = _worldNormals[i]
 		
 		if !(world_normal.distance_to(normal) < epsilon):
 			continue
 			
-		var vertices = _worldVertices[i]		
+		var vertices = _worldVertices[i]
 		
 		var bc: Vector3 = _is_point_in_triangle(point, vertices[0], vertices[1], vertices[2])
 		
 		if bc:
-			return [i, vertices, bc]
-				
+			return [i, vertices, bc] # info: cara, vertices, baricentro
+			
 	return Array()
 
 func _raycast_uv(mouse_position: Vector2) -> void:
@@ -177,7 +177,11 @@ func _raycast_uv(mouse_position: Vector2) -> void:
 	print("normal ", nor)
 	print("collider ", coll)
 	
-	if(_mesh == null && _mesh.mesh == null):
+	if(_meshInstance == null):
+		print("mesh instance null")
+		return
+		
+	if(_meshInstance.mesh == null):
 		print("mesh null")
 		return
 		
@@ -185,7 +189,7 @@ func _raycast_uv(mouse_position: Vector2) -> void:
 		print("MeshDataTool null")
 		return
 		
-	var face: Array = _get_face(pos, nor)
+	var face: Array = _get_face_info(to_global(pos), to_global(nor))
 	
 	if !face:
 		print("face null")
@@ -193,9 +197,10 @@ func _raycast_uv(mouse_position: Vector2) -> void:
 
 	var bc = face[2]
 	
-	var uv1: Vector2 = mdt.get_vertex_uv(_localFaceVertices[face[0]][0])
-	var uv2: Vector2 = mdt.get_vertex_uv(_localFaceVertices[face[0]][1])
-	var uv3: Vector2 = mdt.get_vertex_uv(_localFaceVertices[face[0]][2])
+	var uv1: Vector2 = mdt.get_vertex_uv(_localFaceVertices[face[0]][0]) # vertice 0 de la cara
+	var uv2: Vector2 = mdt.get_vertex_uv(_localFaceVertices[face[0]][1]) # vertice 1 de la cara
+	var uv3: Vector2 = mdt.get_vertex_uv(_localFaceVertices[face[0]][2]) # vertice 2 de la cara
 
 	var uv = (uv1 * bc.x) + (uv2 * bc.y) + (uv3 * bc.z)
 	print("!!!!!!!!!!! UV", uv)
+	
