@@ -1,7 +1,7 @@
 extends SpinBox
 
 @export_category("Cursor")
-@export var cursor: Node2D
+@export var cursor: TextureRect
 
 func resize_brush(_value: float) -> void:
 	Global.brush_size = round(_value)

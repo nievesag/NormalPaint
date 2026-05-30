@@ -7,10 +7,10 @@
 [ext_resource type="Material" uid="uid://fq5grap05sps" path="res://materials/texture_material.tres" id="3_j4ag4"]
 [ext_resource type="Texture2D" uid="uid://bnlij0pmavdcs" path="res://assets/textures/normals/flat_normal_map.png" id="5_06k3k"]
 [ext_resource type="Image" uid="uid://cd6688und1psh" path="res://assets/images/brushes/mask03.png" id="7_mu7j6"]
-[ext_resource type="Script" path="res://scenes/cursor_manager.gd" id="7_w3vxh"]
+[ext_resource type="Script" uid="uid://cpkp8thw4oeoo" path="res://scenes/cursor_manager.gd" id="7_w3vxh"]
 [ext_resource type="Texture2D" uid="uid://uo5ifxequu4m" path="res://assets/textures/brushes/brush01.png" id="8_63kvh"]
 [ext_resource type="Texture2D" uid="uid://bj0try8kegtl8" path="res://assets/images/cursor/01cursor.png" id="8_mp4i6"]
-[ext_resource type="Script" path="res://scenes/brush_resizer.gd" id="8_vxgas"]
+[ext_resource type="Script" uid="uid://d0uhqxjrcx6f5" path="res://scenes/brush_resizer.gd" id="8_vxgas"]
 [ext_resource type="Image" uid="uid://df77wwa5kx8xw" path="res://assets/images/brushes/mask01.png" id="9_2bale"]
 [ext_resource type="Script" uid="uid://bplfs3ftb5fgu" path="res://scenes/brush_selector.gd" id="9_6oc8a"]
 [ext_resource type="Texture2D" uid="uid://derpfua8od6o7" path="res://assets/textures/brushes/brush02.png" id="9_nfndr"]
@@ -45,24 +45,24 @@ texture_material = ExtResource("3_j4ag4")
 normal_material = ExtResource("1_rib1n")
 default_normal_map = ExtResource("5_06k3k")
 
-[node name="CursorManager" type="Node2D" parent="Managers" unique_id=1554559474 node_paths=PackedStringArray("cursor")]
-script = ExtResource("7_w3vxh")
-cursor = NodePath("Cursor")
-
-[node name="Cursor" type="TextureRect" parent="Managers/CursorManager" unique_id=847224818]
+[node name="Cursor" type="TextureRect" parent="Managers" unique_id=847224818]
 texture_filter = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -5.0
-offset_top = -5.0
-offset_right = 5.0
-offset_bottom = 5.0
+offset_left = -576.0
+offset_top = -324.0
+offset_right = -566.0
+offset_bottom = -314.0
 grow_horizontal = 2
 grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+size_flags_horizontal = 4
+size_flags_vertical = 4
 texture = ExtResource("8_mp4i6")
+script = ExtResource("7_w3vxh")
 
 [node name="Geometría" type="Node3D" parent="." unique_id=1189026551]
 
@@ -128,7 +128,7 @@ min_value = 10.0
 max_value = 1000.0
 value = 10.0
 script = ExtResource("8_vxgas")
-cursor = NodePath("../../Managers/CursorManager")
+cursor = NodePath("../../Managers/Cursor")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="UI" unique_id=323163515]
 layout_mode = 1
@@ -151,7 +151,7 @@ layout_mode = 2
 icon = ExtResource("8_63kvh")
 script = ExtResource("9_6oc8a")
 brush_mask = ExtResource("9_2bale")
-cursor = NodePath("../../../../Managers/CursorManager")
+cursor = NodePath("../../../../Managers/Cursor")
 brush_cursor = ExtResource("8_mp4i6")
 
 [node name="Button2" type="Button" parent="UI/ScrollContainer/VBoxContainer" unique_id=273933702 node_paths=PackedStringArray("cursor")]
@@ -160,7 +160,7 @@ layout_mode = 2
 icon = ExtResource("9_nfndr")
 script = ExtResource("9_6oc8a")
 brush_mask = ExtResource("11_2bale")
-cursor = NodePath("../../../../Managers/CursorManager")
+cursor = NodePath("../../../../Managers/Cursor")
 brush_cursor = ExtResource("15_kslj6")
 
 [node name="Button3" type="Button" parent="UI/ScrollContainer/VBoxContainer" unique_id=256333964 node_paths=PackedStringArray("cursor")]
@@ -169,7 +169,7 @@ layout_mode = 2
 icon = ExtResource("10_ouh5r")
 script = ExtResource("9_6oc8a")
 brush_mask = ExtResource("7_mu7j6")
-cursor = NodePath("../../../../Managers/CursorManager")
+cursor = NodePath("../../../../Managers/Cursor")
 brush_cursor = ExtResource("10_ouh5r")
 
 [node name="Button4" type="Button" parent="UI/ScrollContainer/VBoxContainer" unique_id=149061603 node_paths=PackedStringArray("cursor")]
@@ -178,10 +178,9 @@ layout_mode = 2
 icon = ExtResource("11_ouh5r")
 script = ExtResource("9_6oc8a")
 brush_mask = ExtResource("15_3habk")
-cursor = NodePath("../../../../Managers/CursorManager")
+cursor = NodePath("../../../../Managers/Cursor")
 brush_cursor = ExtResource("20_5w7x6")
 
-[connection signal="changed" from="UI/SpinBox" to="UI/SpinBox" method="resize_brush"]
 [connection signal="value_changed" from="UI/SpinBox" to="UI/SpinBox" method="resize_brush"]
 [connection signal="pressed" from="UI/ScrollContainer/VBoxContainer/Button" to="UI/ScrollContainer/VBoxContainer/Button" method="select_brush"]
 [connection signal="pressed" from="UI/ScrollContainer/VBoxContainer/Button2" to="UI/ScrollContainer/VBoxContainer/Button2" method="select_brush"]
