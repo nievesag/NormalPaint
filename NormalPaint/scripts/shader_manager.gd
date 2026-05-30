@@ -9,13 +9,14 @@ var _showing_normal := false
 @export_category("Texturas")
 @export var default_normal_map: Image
 @export var texture_size := Vector2i(1024, 1024)
+var _working_normal_map: ImageTexture
 
 
 func _ready() -> void:
 	_apply_current_material()
-#	var normal_map := _get_normal_map()
-#	normal_map = _paint_mask_in_image(normal_map, Vector2(0.5, 0.5), Global.foreground_color)
-#	_set_normal_map(normal_map)
+	_working_normal_map = _get_normal_map()
+	if _working_normal_map != null:
+		_set_normal_map(_working_normal_map)
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("toggle_view"):
@@ -35,7 +36,7 @@ func _apply_current_material() -> void:
 		return
 
 	#aplicamos el material a la mesh, y es el 0 porque al parecer puede haber varios overrides
-	subject.set_surface_override_material(0, material)
+	subject.mesh.surface_set_material(0, material)
 
 #metodo para recibir el mapa de normales del material de textura
 func _get_normal_map() -> ImageTexture:
@@ -70,6 +71,19 @@ func _set_normal_map(tex: ImageTexture) -> void:
 
 	if normal_material != null:
 		normal_material.set_shader_parameter("normal_tex", tex)
+		
+func paint_at_uv(uv: Vector2, color: Color = Global.foreground_color) -> void:
+	if _working_normal_map == null:
+		_working_normal_map = _get_normal_map()
+	if _working_normal_map == null:
+		return
+
+	var painted_normal_map := _paint_mask_in_image(_working_normal_map, uv, color)
+	if painted_normal_map == null:
+		return
+	
+	_working_normal_map = painted_normal_map
+	_set_normal_map(_working_normal_map)
 
 
 #método para pintar la máscara de pincel actual en una posición uv de la textura dada con un color para la máscara
@@ -96,7 +110,7 @@ func _paint_mask_in_image(texture: ImageTexture, uv: Vector2, color: Color) -> I
 
 	#escalamos la uv a coordenadas sobre la textura real y las usamos como centro de la "circunferencia"
 	var cx := int(uv.x * float(w))
-	var cy := int((1.0 - uv.y) * float(h))
+	var cy := int(uv.y * float(h))
 	var size := maxi(1, Global.brush_size)  #para que no pueda ser 0 y ademas tratamos brush size como radio (no se si esta bien pero me venía de refactorizarlo de la ecuación del círculo
 	var diameter := size * 2
 	var half: int = size

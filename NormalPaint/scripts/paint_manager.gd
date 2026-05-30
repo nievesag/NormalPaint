@@ -4,6 +4,7 @@ extends Node3D
 @export var camera : Camera3D 
 @export_range(0.1, 10000.0, 0.1) var ray_length: float = 10000.0
 @export var _meshInstance : MeshInstance3D
+@export var _shader_manager: Node
 
 @export_category("Color")
 @onready var _colorpicker : ColorPickerButton = $"../../UI/ColorPickerButton"
@@ -247,6 +248,8 @@ func _raycast_uv(mouse_position: Vector2) -> void:
 				uv = _uvs[v] # guardo la uv asociada a ese vertice
 
 	print("UV!!!!!!!!!!: ", uv)
+	if _shader_manager != null and _shader_manager.has_method("paint_at_uv"):
+		_shader_manager.call("paint_at_uv", uv)
 		
 #	var face: Array = _get_face_info(to_global(pos), to_global(nor))
 #	
@@ -265,4 +268,8 @@ func _raycast_uv(mouse_position: Vector2) -> void:
 	
 func _on_color_picker_button_color_changed(color: Color) -> void:
 	Global.foreground_color = color
+	pass # Replace with function body.
+
+
+func _on_button_toggled(toggled_on: bool, extra_arg_0: int, extra_arg_1: String) -> void:
 	pass # Replace with function body.
