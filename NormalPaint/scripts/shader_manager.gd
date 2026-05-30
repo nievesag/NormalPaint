@@ -8,23 +8,18 @@ var _showing_normal := false
 
 @export_category("Texturas")
 @export var default_normal_map: Image
-@export var normal_image: Image
-@export var normal_texture: ImageTexture
-@export var texture_image: Image
-@export var texture_texture: ImageTexture
+@export var texture_size := Vector2i(1024, 1024)
 
 @export_category("Mascaras")
-@export var mask_image: Image
-@export var mask_texture: ImageTexture
-@export var texture_size := Vector2i(1024, 1024)
-@export var brush_radius: float = 12
+@export var brush_mask: Image
+@export var brush_size: int = 32
 @export_range(0.0, 1.0) var brush_strength: float = 1.0
 
 
 func _ready() -> void:
 	_apply_current_material()
 	var normal_map := _get_normal_map()
-	normal_map = _paint_circle_in_image(normal_map, Vector2(0.5, 0.5), 32, Color(1.0, 1.0, 1.0, 1.0))
+	normal_map = _paint_mask_in_image(normal_map, Vector2(0.5, 0.5), Global.foreground_color)
 	_set_normal_map(normal_map)
 
 
@@ -77,7 +72,7 @@ func _set_normal_map(tex: ImageTexture) -> void:
 		normal_material.set_shader_parameter("normal_tex", tex)
 
 
-func _paint_circle_in_image(texture: ImageTexture, uv: Vector2, radius: int, normal_color: Color) -> ImageTexture:
+func _paint_mask_in_image(texture: ImageTexture, uv: Vector2, color: Color) -> ImageTexture:
 	if texture == null:
 		push_error("Imposible pintar en textura nula")
 		return null
@@ -87,19 +82,41 @@ func _paint_circle_in_image(texture: ImageTexture, uv: Vector2, radius: int, nor
 		push_error("Imagen de textura nula")
 		return null
 
+	if brush_mask == null:
+		push_error("Mascara de pincel nula")
+		return texture
+
 	var w := image.get_width()
 	var h := image.get_height()
+	var mask_w := brush_mask.get_width()
+	var mask_h := brush_mask.get_height()
 
 	var cx := int(uv.x * float(w))
 	var cy := int((1.0 - uv.y) * float(h))
+	var size := maxi(1, brush_size)
+	var diameter := size * 2
+	var half: int = size
 
-	for y in range(cy - radius, cy + radius):
-		for x in range(cx - radius, cx + radius):
+	# lo qeu acabará siendo el shader de cómputo
+	for y in range(cy - half, cy + half):
+		for x in range(cx - half, cx + half):
 			if x < 0 or y < 0 or x >= w or y >= h:
 				continue
-			var d := Vector2(x - cx, y - cy).length()
-			if d <= radius:
-				image.set_pixel(x, y, normal_color)
+
+			var local_x := x - (cx - half)
+			var local_y := y - (cy - half)
+			var u := clampf(float(local_x) / float(maxi(1, diameter - 1)), 0.0, 1.0)
+			var v := clampf(float(local_y) / float(maxi(1, diameter - 1)), 0.0, 1.0)
+			var mx := int(round(u * float(mask_w - 1)))
+			var my := int(round(v * float(mask_h - 1)))
+
+			var mask_px := brush_mask.get_pixel(mx, my)
+			var mask_value := clampf(mask_px.r, 0.0, 1.0) * brush_strength
+			if mask_value <= 0.0:
+				continue
+
+			var base := image.get_pixel(x, y)
+			image.set_pixel(x, y, base.lerp(color, mask_value))
 
 	texture.update(image)
 	return texture

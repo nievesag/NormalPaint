@@ -1,0 +1,14 @@
+[remap]
+
+importer="image"
+type="Image"
+uid="uid://pa0j7iux2yrp"
+path="res://.godot/imported/sphere_normal_map.png-8997822b7afe8c37d39ce5791d2120ae.image"
+
+[deps]
+
+source_file="res://assets/images/normals/sphere_normal_map.png"
+dest_files=["res://.godot/imported/sphere_normal_map.png-8997822b7afe8c37d39ce5791d2120ae.image"]
+
+[params]
+
