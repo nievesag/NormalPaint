@@ -10,12 +10,12 @@ var _showing_normal := false
 @export var default_normal_map: Image
 @export var texture_size := Vector2i(1024, 1024)
 
+
 func _ready() -> void:
 	_apply_current_material()
 #	var normal_map := _get_normal_map()
 #	normal_map = _paint_mask_in_image(normal_map, Vector2(0.5, 0.5), Global.foreground_color)
 #	_set_normal_map(normal_map)
-
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("toggle_view"):

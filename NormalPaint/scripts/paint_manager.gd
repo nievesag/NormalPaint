@@ -1,10 +1,15 @@
 extends Node3D
 
+@export_category("Dibujo")
 @export var camera : Camera3D 
 @export_range(0.1, 10000.0, 0.1) var ray_length: float = 10000.0
 @export var _meshInstance : MeshInstance3D
 
+@export_category("Color")
 @onready var _colorpicker : ColorPickerButton = $"../../UI/ColorPickerButton"
+
+@export_category("Pinceles")
+@export var default_brush_mask: Image # mascara asociada a este pincel
 
 var mdt: MeshDataTool
 
@@ -29,6 +34,8 @@ func _ready() -> void:
 	
 	if _colorpicker != null:
 		Global.foreground_color = _colorpicker.color
+		
+	Global.brush_mask = default_brush_mask
 	
 	mdt = MeshDataTool.new()
 	var mesh: Mesh = _meshInstance.mesh
