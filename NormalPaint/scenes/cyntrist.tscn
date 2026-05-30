@@ -5,9 +5,12 @@
 [ext_resource type="Script" uid="uid://dxqfd2g57esxl" path="res://scripts/shader_manager.gd" id="2_k55y0"]
 [ext_resource type="Script" uid="uid://dx1fl7e5fcsya" path="res://scripts/paint_manager.gd" id="3_13p4k"]
 [ext_resource type="Material" uid="uid://fq5grap05sps" path="res://materials/texture_material.tres" id="3_j4ag4"]
-[ext_resource type="Image" uid="uid://bnlij0pmavdcs" path="res://assets/images/flat_normal_map.png" id="5_06k3k"]
-[ext_resource type="Image" uid="uid://cd6688und1psh" path="res://assets/images/mask03.png" id="6_b70dw"]
-[ext_resource type="Texture2D" uid="uid://c1tp7pqe622b5" path="res://icon.svg" id="7_b70dw"]
+[ext_resource type="Image" uid="uid://bnlij0pmavdcs" path="res://assets/images/normals/flat_normal_map.png" id="5_06k3k"]
+[ext_resource type="Image" uid="uid://cd6688und1psh" path="res://assets/images/brushes/mask03.png" id="7_mu7j6"]
+[ext_resource type="Texture2D" uid="uid://uo5ifxequu4m" path="res://assets/textures/brushes/brush01.png" id="8_63kvh"]
+[ext_resource type="Texture2D" uid="uid://derpfua8od6o7" path="res://assets/textures/brushes/brush02.png" id="9_nfndr"]
+[ext_resource type="Texture2D" uid="uid://vato1yi368n0" path="res://assets/textures/brushes/brush03.png" id="10_ouh5r"]
+[ext_resource type="Texture2D" uid="uid://e6l8rwnqvxm8" path="res://assets/textures/brushes/brush04.png" id="11_ouh5r"]
 
 [sub_resource type="TorusMesh" id="TorusMesh_5c66o"]
 material = ExtResource("3_j4ag4")
@@ -19,11 +22,10 @@ data = PackedVector3Array(-0.049, 0, -0.4976, 0, 0.0488, -0.50479996, 0, 0, -0.5
 
 [node name="Managers" type="Node3D" parent="." unique_id=723519600]
 
-[node name="PaintManager" type="Node3D" parent="Managers" unique_id=1357153141 node_paths=PackedStringArray("camera", "_meshInstance", "_textureDebug")]
+[node name="PaintManager" type="Node3D" parent="Managers" unique_id=1357153141 node_paths=PackedStringArray("camera", "_meshInstance")]
 script = ExtResource("3_13p4k")
 camera = NodePath("../../Camera3D")
 _meshInstance = NodePath("../../Geometría/Meshes/StaticBody3D/MeshInstance3D")
-_textureDebug = NodePath("../../TextureRect")
 
 [node name="ShaderManager" type="Node3D" parent="Managers" unique_id=925348982 node_paths=PackedStringArray("subject")]
 script = ExtResource("2_k55y0")
@@ -31,7 +33,7 @@ subject = NodePath("../../Geometría/Meshes/StaticBody3D/MeshInstance3D")
 texture_material = ExtResource("3_j4ag4")
 normal_material = ExtResource("1_rib1n")
 default_normal_map = ExtResource("5_06k3k")
-brush_mask = ExtResource("6_b70dw")
+brush_mask = ExtResource("7_mu7j6")
 
 [node name="Geometría" type="Node3D" parent="." unique_id=1189026551]
 
@@ -55,13 +57,53 @@ transform = Transform3D(0.23514207, 0, -0.971961, 0, 1, 0, 0.971961, 0, 0.235142
 transform = Transform3D(0.7071068, -0.4055798, 0.579228, 0, 0.81915206, 0.57357645, -0.7071068, -0.4055798, 0.579228, 2, 2, 2)
 script = ExtResource("1_hox4a")
 
-[node name="ColorPickerButton" type="ColorPickerButton" parent="." unique_id=699014604]
+[node name="UI" type="Control" parent="." unique_id=1237379619]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+
+[node name="ColorPickerButton" type="ColorPickerButton" parent="UI" unique_id=699014604]
+layout_mode = 1
 anchors_preset = -1
 offset_right = 111.0
 offset_bottom = 33.0
 text = "Color Picker"
 icon_alignment = 1
 color = Color(0.80561507, 0.36098176, 0.518984, 1)
+
+[node name="ScrollContainer" type="ScrollContainer" parent="UI" unique_id=323163515]
+layout_mode = 0
+offset_left = 999.0
+offset_top = 5.0
+offset_right = 1143.0
+offset_bottom = 187.0
+horizontal_scroll_mode = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/ScrollContainer" unique_id=403044906]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Button" type="Button" parent="UI/ScrollContainer/VBoxContainer" unique_id=2144295100]
+clip_contents = true
+layout_mode = 2
+icon = ExtResource("8_63kvh")
+
+[node name="Button2" type="Button" parent="UI/ScrollContainer/VBoxContainer" unique_id=273933702]
+clip_contents = true
+layout_mode = 2
+icon = ExtResource("9_nfndr")
+
+[node name="Button3" type="Button" parent="UI/ScrollContainer/VBoxContainer" unique_id=256333964]
+clip_contents = true
+layout_mode = 2
+icon = ExtResource("10_ouh5r")
+
+[node name="Button4" type="Button" parent="UI/ScrollContainer/VBoxContainer" unique_id=149061603]
+clip_contents = true
+layout_mode = 2
+icon = ExtResource("11_ouh5r")
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=562337275]
 anchors_preset = -1
@@ -73,6 +115,3 @@ offset_left = 0.08795166
 offset_top = -0.0720005
 offset_right = 128.08795
 offset_bottom = 127.928
-texture = ExtResource("7_b70dw")
-
-[connection signal="color_changed" from="ColorPickerButton" to="Managers/PaintManager" method="_on_color_picker_button_color_changed"]

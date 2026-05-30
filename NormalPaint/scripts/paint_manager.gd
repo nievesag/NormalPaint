@@ -3,9 +3,8 @@ extends Node3D
 @export var camera : Camera3D 
 @export_range(0.1, 10000.0, 0.1) var ray_length: float = 10000.0
 @export var _meshInstance : MeshInstance3D
-@export var _textureDebug : TextureRect
 
-@onready var _colorpicker : ColorPickerButton = $"../../ColorPickerButton"
+@onready var _colorpicker : ColorPickerButton = $"../../UI/ColorPickerButton"
 
 var mdt: MeshDataTool
 
