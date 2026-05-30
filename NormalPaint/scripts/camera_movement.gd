@@ -2,7 +2,6 @@ extends Node3D
 
 #https://github.com/godotengine/godot/blob/master/editor/scene/3d/node_3d_editor_plugin.cpp
 #https://docs.godotengine.org/en/stable/classes/class_editorsettings.html
-#TODO en el editor de godot el look around del right click sobreescribe el orbit target
 
 @export_group("Velocidad")
 @export var speed: float = 8.0
