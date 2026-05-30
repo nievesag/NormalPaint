@@ -181,6 +181,7 @@ brush_mask = ExtResource("15_3habk")
 cursor = NodePath("../../../../Managers/Cursor")
 brush_cursor = ExtResource("20_5w7x6")
 
+[connection signal="color_changed" from="UI/ColorPickerButton" to="Managers/PaintManager" method="_on_color_picker_button_color_changed"]
 [connection signal="value_changed" from="UI/SpinBox" to="UI/SpinBox" method="resize_brush"]
 [connection signal="pressed" from="UI/ScrollContainer/VBoxContainer/Button" to="UI/ScrollContainer/VBoxContainer/Button" method="select_brush"]
 [connection signal="pressed" from="UI/ScrollContainer/VBoxContainer/Button2" to="UI/ScrollContainer/VBoxContainer/Button2" method="select_brush"]

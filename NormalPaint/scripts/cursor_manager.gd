@@ -1,7 +1,8 @@
 extends TextureRect
 
 func _ready() -> void:
-	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+#	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+	pass
 
 func _process(delta: float) -> void:
 	self.position = self.get_global_mouse_position() - self.size * 0.5

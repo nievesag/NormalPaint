@@ -109,11 +109,11 @@ func _paint_mask_in_image(texture: ImageTexture, uv: Vector2, color: Color) -> I
 	var mask_h := Global.brush_mask.get_height()
 
 	#escalamos la uv a coordenadas sobre la textura real y las usamos como centro de la "circunferencia"
-	var cx := int(uv.x * float(w))
-	var cy := int(uv.y * float(h))
-	var size := maxi(1, Global.brush_size)  #para que no pueda ser 0 y ademas tratamos brush size como radio (no se si esta bien pero me venía de refactorizarlo de la ecuación del círculo
+	var cx := uv.x * float(w)
+	var cy := uv.y * float(h)
+	var size := maxf(1.0, Global.brush_size)  #para que no pueda ser 0 y ademas tratamos brush size como radio (no se si esta bien pero me venía de refactorizarlo de la ecuación del círculo
 	var diameter := size * 2
-	var half: int = size
+	var half:= size
 
 	# lo qeu acabará siendo el shader de cómputo
 	for y in range(cy - half, cy + half):
@@ -128,8 +128,8 @@ func _paint_mask_in_image(texture: ImageTexture, uv: Vector2, color: Color) -> I
 			
 			#normalizamos la pos local dentro de 0-1
 			# maxi evita dividir entre 0 si el diametro fuese 1
-			var u := clampf(float(local_x) / float(maxi(1, diameter - 1)), 0.0, 1.0)
-			var v := clampf(float(local_y) / float(maxi(1, diameter - 1)), 0.0, 1.0)
+			var u := clampf(float(local_x) / float(max(1, diameter - 1)), 0.0, 1.0)
+			var v := clampf(float(local_y) / float(max(1, diameter - 1)), 0.0, 1.0)
 			
 			#convertimos esa posición normalizada a coordenadas reales dentro de la máscara del brush
 			#si u = 0.0 → mx = 0
