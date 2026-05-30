@@ -7,7 +7,10 @@
 [ext_resource type="Material" uid="uid://fq5grap05sps" path="res://materials/texture_material.tres" id="3_j4ag4"]
 [ext_resource type="Texture2D" uid="uid://bnlij0pmavdcs" path="res://assets/textures/normals/flat_normal_map.png" id="5_06k3k"]
 [ext_resource type="Image" uid="uid://cd6688und1psh" path="res://assets/images/brushes/mask03.png" id="7_mu7j6"]
+[ext_resource type="Script" uid="uid://cpkp8thw4oeoo" path="res://scenes/cursor_manager.gd" id="7_w3vxh"]
 [ext_resource type="Texture2D" uid="uid://uo5ifxequu4m" path="res://assets/textures/brushes/brush01.png" id="8_63kvh"]
+[ext_resource type="Texture2D" uid="uid://bj0try8kegtl8" path="res://assets/images/cursor/01cursor.png" id="8_mp4i6"]
+[ext_resource type="Script" uid="uid://d0uhqxjrcx6f5" path="res://scenes/brush_resizer.gd" id="8_vxgas"]
 [ext_resource type="Image" uid="uid://df77wwa5kx8xw" path="res://assets/images/brushes/mask01.png" id="9_2bale"]
 [ext_resource type="Script" uid="uid://bplfs3ftb5fgu" path="res://scenes/brush_selector.gd" id="9_6oc8a"]
 [ext_resource type="Texture2D" uid="uid://derpfua8od6o7" path="res://assets/textures/brushes/brush02.png" id="9_nfndr"]
@@ -15,6 +18,8 @@
 [ext_resource type="Image" uid="uid://co26d68f3qjt" path="res://assets/images/brushes/mask02.png" id="11_2bale"]
 [ext_resource type="Texture2D" uid="uid://e6l8rwnqvxm8" path="res://assets/textures/brushes/brush04.png" id="11_ouh5r"]
 [ext_resource type="Image" uid="uid://bpuukr4k5cb70" path="res://assets/images/brushes/mask04.png" id="15_3habk"]
+[ext_resource type="Texture2D" uid="uid://1lskmd1sltgl" path="res://assets/images/cursor/02cursor.png" id="15_kslj6"]
+[ext_resource type="Texture2D" uid="uid://v7j120xn5msd" path="res://assets/images/cursor/04cursor.png" id="20_5w7x6"]
 
 [sub_resource type="TorusMesh" id="TorusMesh_5c66o"]
 material = ExtResource("3_j4ag4")
@@ -39,6 +44,25 @@ subject = NodePath("../../Geometría/Meshes/StaticBody3D/MeshInstance3D")
 texture_material = ExtResource("3_j4ag4")
 normal_material = ExtResource("1_rib1n")
 default_normal_map = ExtResource("5_06k3k")
+
+[node name="CursorManager" type="Node2D" parent="Managers" unique_id=1554559474 node_paths=PackedStringArray("cursor")]
+script = ExtResource("7_w3vxh")
+cursor = NodePath("Cursor")
+
+[node name="Cursor" type="TextureRect" parent="Managers/CursorManager" unique_id=847224818]
+texture_filter = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -5.0
+offset_top = -5.0
+offset_right = 5.0
+offset_bottom = 5.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("8_mp4i6")
 
 [node name="Geometría" type="Node3D" parent="." unique_id=1189026551]
 
@@ -71,11 +95,37 @@ offset_bottom = 648.0
 [node name="ColorPickerButton" type="ColorPickerButton" parent="UI" unique_id=699014604]
 layout_mode = 1
 anchors_preset = -1
-offset_right = 111.0
-offset_bottom = 33.0
+anchor_left = 0.004
+anchor_top = 0.008
+anchor_right = 0.004
+anchor_bottom = 0.008
+offset_left = -4.6080003
+offset_top = -5.184
+offset_right = 106.392
+offset_bottom = 27.816
 text = "Color Picker"
 icon_alignment = 1
 color = Color(0.80561507, 0.36098176, 0.518984, 1)
+
+[node name="Label" type="Label" parent="UI" unique_id=953833827]
+layout_mode = 0
+offset_left = 904.0
+offset_top = 8.0
+offset_right = 983.0
+offset_bottom = 31.0
+text = "Brush size"
+
+[node name="SpinBox" type="SpinBox" parent="UI" unique_id=672386729 node_paths=PackedStringArray("cursor")]
+layout_mode = 0
+offset_left = 904.0
+offset_top = 36.0
+offset_right = 990.5
+offset_bottom = 67.0
+min_value = 10.0
+max_value = 1000.0
+value = 10.0
+script = ExtResource("8_vxgas")
+cursor = NodePath("../../Managers/CursorManager")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="UI" unique_id=323163515]
 layout_mode = 0
@@ -90,34 +140,44 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Button" type="Button" parent="UI/ScrollContainer/VBoxContainer" unique_id=2144295100]
+[node name="Button" type="Button" parent="UI/ScrollContainer/VBoxContainer" unique_id=2144295100 node_paths=PackedStringArray("cursor")]
 clip_contents = true
 layout_mode = 2
 icon = ExtResource("8_63kvh")
 script = ExtResource("9_6oc8a")
 brush_mask = ExtResource("9_2bale")
+cursor = NodePath("../../../../Managers/CursorManager")
+brush_cursor = ExtResource("8_mp4i6")
 
-[node name="Button2" type="Button" parent="UI/ScrollContainer/VBoxContainer" unique_id=273933702]
+[node name="Button2" type="Button" parent="UI/ScrollContainer/VBoxContainer" unique_id=273933702 node_paths=PackedStringArray("cursor")]
 clip_contents = true
 layout_mode = 2
 icon = ExtResource("9_nfndr")
 script = ExtResource("9_6oc8a")
 brush_mask = ExtResource("11_2bale")
+cursor = NodePath("../../../../Managers/CursorManager")
+brush_cursor = ExtResource("15_kslj6")
 
-[node name="Button3" type="Button" parent="UI/ScrollContainer/VBoxContainer" unique_id=256333964]
+[node name="Button3" type="Button" parent="UI/ScrollContainer/VBoxContainer" unique_id=256333964 node_paths=PackedStringArray("cursor")]
 clip_contents = true
 layout_mode = 2
 icon = ExtResource("10_ouh5r")
 script = ExtResource("9_6oc8a")
 brush_mask = ExtResource("7_mu7j6")
+cursor = NodePath("../../../../Managers/CursorManager")
+brush_cursor = ExtResource("10_ouh5r")
 
-[node name="Button4" type="Button" parent="UI/ScrollContainer/VBoxContainer" unique_id=149061603]
+[node name="Button4" type="Button" parent="UI/ScrollContainer/VBoxContainer" unique_id=149061603 node_paths=PackedStringArray("cursor")]
 clip_contents = true
 layout_mode = 2
 icon = ExtResource("11_ouh5r")
 script = ExtResource("9_6oc8a")
 brush_mask = ExtResource("15_3habk")
+cursor = NodePath("../../../../Managers/CursorManager")
+brush_cursor = ExtResource("20_5w7x6")
 
+[connection signal="changed" from="UI/SpinBox" to="UI/SpinBox" method="resize_brush"]
+[connection signal="value_changed" from="UI/SpinBox" to="UI/SpinBox" method="resize_brush"]
 [connection signal="pressed" from="UI/ScrollContainer/VBoxContainer/Button" to="UI/ScrollContainer/VBoxContainer/Button" method="select_brush"]
 [connection signal="pressed" from="UI/ScrollContainer/VBoxContainer/Button2" to="UI/ScrollContainer/VBoxContainer/Button2" method="select_brush"]
 [connection signal="pressed" from="UI/ScrollContainer/VBoxContainer/Button3" to="UI/ScrollContainer/VBoxContainer/Button3" method="select_brush"]
