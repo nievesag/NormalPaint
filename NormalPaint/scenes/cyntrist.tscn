@@ -104,14 +104,3 @@ icon = ExtResource("10_ouh5r")
 clip_contents = true
 layout_mode = 2
 icon = ExtResource("11_ouh5r")
-
-[node name="TextureRect" type="TextureRect" parent="." unique_id=562337275]
-anchors_preset = -1
-anchor_left = 0.88100004
-anchor_top = 0.014
-anchor_right = 0.88100004
-anchor_bottom = 0.014
-offset_left = 0.08795166
-offset_top = -0.0720005
-offset_right = 128.08795
-offset_bottom = 127.928
