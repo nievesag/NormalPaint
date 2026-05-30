@@ -30,6 +30,7 @@ data = PackedVector3Array(-0.049, 0, -0.4976, 0, 0.0488, -0.50479996, 0, 0, -0.5
 script = ExtResource("3_13p4k")
 camera = NodePath("../../Camera3D")
 _meshInstance = NodePath("../../Geometría/Meshes/StaticBody3D/MeshInstance3D")
+default_brush_mask = ExtResource("9_2bale")
 
 [node name="ShaderManager" type="Node3D" parent="Managers" unique_id=925348982 node_paths=PackedStringArray("subject")]
 script = ExtResource("2_k55y0")
