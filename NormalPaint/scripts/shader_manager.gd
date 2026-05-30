@@ -10,12 +10,6 @@ var _showing_normal := false
 @export var default_normal_map: Image
 @export var texture_size := Vector2i(1024, 1024)
 
-@export_category("Mascaras")
-@export var brush_mask: Image
-@export var brush_size: int = 32
-@export_range(0.0, 1.0) var brush_strength: float = 1.0
-
-
 func _ready() -> void:
 	_apply_current_material()
 	var normal_map := _get_normal_map()
@@ -82,18 +76,18 @@ func _paint_mask_in_image(texture: ImageTexture, uv: Vector2, color: Color) -> I
 		push_error("Imagen de textura nula")
 		return null
 
-	if brush_mask == null:
+	if Global.brush_mask == null:
 		push_error("Mascara de pincel nula")
 		return texture
 
 	var w := image.get_width()
 	var h := image.get_height()
-	var mask_w := brush_mask.get_width()
-	var mask_h := brush_mask.get_height()
+	var mask_w := Global.brush_mask.get_width()
+	var mask_h := Global.brush_mask.get_height()
 
 	var cx := int(uv.x * float(w))
 	var cy := int((1.0 - uv.y) * float(h))
-	var size := maxi(1, brush_size)
+	var size := maxi(1, Global.brush_size)
 	var diameter := size * 2
 	var half: int = size
 
@@ -110,8 +104,8 @@ func _paint_mask_in_image(texture: ImageTexture, uv: Vector2, color: Color) -> I
 			var mx := int(round(u * float(mask_w - 1)))
 			var my := int(round(v * float(mask_h - 1)))
 
-			var mask_px := brush_mask.get_pixel(mx, my)
-			var mask_value := clampf(mask_px.r, 0.0, 1.0) * brush_strength
+			var mask_px := Global.brush_mask.get_pixel(mx, my)
+			var mask_value := clampf(mask_px.r, 0.0, 1.0) * Global.brush_strength
 			if mask_value <= 0.0:
 				continue
 
