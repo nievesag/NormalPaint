@@ -2,10 +2,11 @@
 
 [ext_resource type="Script" uid="uid://ccbp77048k4x2" path="res://scripts/camera_movement.gd" id="1_hox4a"]
 [ext_resource type="Material" uid="uid://ceu1jg37qxylh" path="res://materials/normal_material.tres" id="1_rib1n"]
-[ext_resource type="Script" path="res://scripts/shader_manager.gd" id="2_k55y0"]
+[ext_resource type="Script" uid="uid://6aiw7jhwqh4j" path="res://scripts/shader_manager.gd" id="2_k55y0"]
 [ext_resource type="Script" uid="uid://dx1fl7e5fcsya" path="res://scripts/paint_manager.gd" id="3_13p4k"]
 [ext_resource type="Material" uid="uid://fq5grap05sps" path="res://materials/texture_material.tres" id="3_j4ag4"]
 [ext_resource type="Image" uid="uid://bnlij0pmavdcs" path="res://assets/images/flat_normal_map.png" id="5_06k3k"]
+[ext_resource type="Texture2D" uid="uid://c1tp7pqe622b5" path="res://icon.svg" id="7_b70dw"]
 
 [sub_resource type="TorusMesh" id="TorusMesh_5c66o"]
 material = ExtResource("3_j4ag4")
@@ -17,10 +18,11 @@ data = PackedVector3Array(-0.049, 0, -0.4976, 0, 0.0488, -0.50479996, 0, 0, -0.5
 
 [node name="Managers" type="Node3D" parent="." unique_id=723519600]
 
-[node name="PaintManager" type="Node3D" parent="Managers" unique_id=1357153141 node_paths=PackedStringArray("camera", "_meshInstance")]
+[node name="PaintManager" type="Node3D" parent="Managers" unique_id=1357153141 node_paths=PackedStringArray("camera", "_meshInstance", "_textureDebug")]
 script = ExtResource("3_13p4k")
 camera = NodePath("../../Camera3D")
 _meshInstance = NodePath("../../Geometría/Meshes/StaticBody3D/MeshInstance3D")
+_textureDebug = NodePath("../../TextureRect")
 
 [node name="ShaderManager" type="Node3D" parent="Managers" unique_id=925348982 node_paths=PackedStringArray("subject")]
 script = ExtResource("2_k55y0")
@@ -58,3 +60,15 @@ offset_bottom = 33.0
 text = "Color Picker"
 icon_alignment = 1
 color = Color(0.80561507, 0.36098176, 0.518984, 1)
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=562337275]
+anchors_preset = -1
+anchor_left = 0.88100004
+anchor_top = 0.014
+anchor_right = 0.88100004
+anchor_bottom = 0.014
+offset_left = 0.08795166
+offset_top = -0.0720005
+offset_right = 128.08795
+offset_bottom = 127.928
+texture = ExtResource("7_b70dw")

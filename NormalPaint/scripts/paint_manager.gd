@@ -4,6 +4,7 @@ extends Node3D
 @export_range(0.1, 10000.0, 0.1) var ray_length: float = 10000.0
 
 @export var _meshInstance : MeshInstance3D
+@export var _textureDebug : TextureRect
 
 var mdt: MeshDataTool
 
@@ -11,6 +12,11 @@ var _numFaces := 0 # numero de caras triangulares de la mesh
 var _worldNormals := PackedVector3Array() # array de las normales de cada cara
 var _worldVertices := [] # array de posiciones de vertices en el mundo
 var _localFaceVertices := [] # array de los vertices locales a la mesh
+
+# pruebas
+var _vertices
+var _uvs
+var _indices
 
 func _ready() -> void:
 	if camera == null:
@@ -27,6 +33,12 @@ func _ready() -> void:
 	if mesh == null:
 		print_debug("LA MESH DE LA MESHINSTANCE3D NO ES VÁLIDA")
 		return
+	
+	var arrays: Array = mesh.surface_get_arrays(0)
+	# info de la mesh ->
+	_vertices = arrays[Mesh.ARRAY_VERTEX]
+	_uvs = arrays[Mesh.ARRAY_TEX_UV]
+	_indices = arrays[Mesh.ARRAY_INDEX]
 	
 	# saco en arraymesh del mesh de la meshinstance para poder pasarselo a create_from_surface
 	var arrMesh: ArrayMesh = ArrayMesh.new()
@@ -67,23 +79,29 @@ func _cart2bary(p : Vector3, a : Vector3, b : Vector3, c: Vector3) -> Vector3:
 	var v0 := b - a
 	var v1 := c - a
 	#var v2 := p - a
-	
+
 	var pb := b - p
 	var pc := c - p
 	var pa := a - p
-	
-	var area: float = (v0.dot(v1) / 2)
+
+	var cr: Vector3 = (v0.cross(v1))
+
+	var area: float = (cr).length() / 2
 	print_debug("AREAAAAA: ", area)
-	
+
 	# https://math.stackexchange.com/questions/4322/check-whether-a-point-is-within-a-3d-triangle
-	var alfa: float = (pb.dot(pc) / 2 * area)
-	var beta: float = (pc.dot(pa) / 2 * area)
+	
+	var alfa_cr: Vector3 = (pb.cross(pc))
+	
+	var beta_cr: Vector3 = (pc.cross(pa))
+	
+	var alfa: float = (alfa_cr).length() / 2 * area
+	var beta: float = (beta_cr).length()  / 2 * area
 	var gamma: float = 1.0 - alfa - beta
-	
-	var sum: float = alfa + beta + gamma
-	print_debug(sum)
+
+
 	print_debug("peter: ", alfa, " ", beta, " ", gamma)
-	
+
 	return Vector3(alfa, beta, gamma)
 	
 # https://github.com/Arnklit/WaterwaysDemo/blob/014c15121ddec26b5cab7f70218414bad0bb3b5d/addons/waterways/water_helper_methods.gd#L20
@@ -126,9 +144,25 @@ func _cart2bary(p : Vector3, a : Vector3, b : Vector3, c: Vector3) -> Vector3:
 	
 	#return Vector3(u, v, w)
 	
+#	var v0 := b - a
+#	var v1 := c - a
+#	var v2 := p - a
+#	var d00 := v0.dot(v0)
+#	var d01 := v0.dot(v1)
+#	var d11 := v1.dot(v1)
+#	var d20 := v2.dot(v0)
+#	var d21 := v2.dot(v1)
+#	var denom := d00 * d11 - d01 * d01
+#	var v = (d11 * d20 - d01 * d21) / denom
+#	var w = (d00 * d21 - d01 * d20) / denom
+#	var u = 1.0 - v - w
+#	return Vector3(u, v, w)
+	
 func _is_point_in_triangle(point, v1, v2, v3) -> Vector3:
 	var bc: Vector3 = _cart2bary(point, v1, v2, v3)
-	if (bc.x >= 0 && bc.x <= 1) && (bc.y >= 0 && bc.y <= 1) or (bc.z >= 0 && bc.z <= 1):
+	var sum: float = round(bc.x + bc.y + bc.z)
+	print_debug("suma ", sum)
+	if (bc.x >= 0 && bc.x <= 1) && (bc.y >= 0 && bc.y <= 1) && (bc.z >= 0 && bc.z <= 1) && (sum == 1):
 		return bc
 	
 	return Vector3()
@@ -188,19 +222,34 @@ func _raycast_uv(mouse_position: Vector2) -> void:
 	if(mdt == null):
 		print("MeshDataTool null")
 		return
+	
+	var uv: Vector2 = Vector2()
+	var min_dist = INF # va guardando la distancia mas pequeña hasta el momento
+	
+	for i in range(0, _indices.size(), 3): # coge los indices de 3 en 3
+		for j in range(3): # recorre cada uno de los 3 vertices de una cara
+			var v = _indices[i + j] # coge el indice que estamos recorriendo del array de indices totales
+			var v_world = _meshInstance.global_transform * _vertices[v] # posicion en el mundo
+			var dist: float = to_global(pos).distance_to(v_world) # distancia entre el vertice que evaluo y la pos de colision del rayo
+			
+			if dist < min_dist: # si la nueva distancia calculada es menor que la ultima hasta ahora
+				min_dist = dist # se sobreescribe
+				uv = _uvs[v] # guardo la uv asociada a ese vertice
+
+	print("UV!!!!!!!!!!: ", uv)
 		
-	var face: Array = _get_face_info(to_global(pos), to_global(nor))
-	
-	if !face:
-		print("face null")
-		return
-
-	var bc = face[2]
-	
-	var uv1: Vector2 = mdt.get_vertex_uv(_localFaceVertices[face[0]][0]) # vertice 0 de la cara
-	var uv2: Vector2 = mdt.get_vertex_uv(_localFaceVertices[face[0]][1]) # vertice 1 de la cara
-	var uv3: Vector2 = mdt.get_vertex_uv(_localFaceVertices[face[0]][2]) # vertice 2 de la cara
-
-	var uv = (uv1 * bc.x) + (uv2 * bc.y) + (uv3 * bc.z)
-	print("!!!!!!!!!!! UV", uv)
+#	var face: Array = _get_face_info(to_global(pos), to_global(nor))
+#	
+#	if !face:
+#		print("face null")
+#		return
+#
+#	var bc = face[2]
+#	
+#	var uv1: Vector2 = mdt.get_vertex_uv(_localFaceVertices[face[0]][0]) # vertice 0 de la cara
+#	var uv2: Vector2 = mdt.get_vertex_uv(_localFaceVertices[face[0]][1]) # vertice 1 de la cara
+#	var uv3: Vector2 = mdt.get_vertex_uv(_localFaceVertices[face[0]][2]) # vertice 2 de la cara
+#
+#	var uv = (uv1 * bc.x) + (uv2 * bc.y) + (uv3 * bc.z)
+	#print("!!!!!!!!!!! UV", uv)
 	
