@@ -7,6 +7,7 @@
 [ext_resource type="Material" uid="uid://fq5grap05sps" path="res://materials/texture_material.tres" id="3_j4ag4"]
 [ext_resource type="Image" uid="uid://bnlij0pmavdcs" path="res://assets/images/flat_normal_map.png" id="5_06k3k"]
 [ext_resource type="Texture2D" uid="uid://c1tp7pqe622b5" path="res://icon.svg" id="7_b70dw"]
+[ext_resource type="Image" uid="uid://cd6688und1psh" path="res://assets/images/mask03.png" id="6_b70dw"]
 
 [sub_resource type="TorusMesh" id="TorusMesh_5c66o"]
 material = ExtResource("3_j4ag4")
@@ -30,6 +31,7 @@ subject = NodePath("../../Geometría/Meshes/StaticBody3D/MeshInstance3D")
 texture_material = ExtResource("3_j4ag4")
 normal_material = ExtResource("1_rib1n")
 default_normal_map = ExtResource("5_06k3k")
+brush_mask = ExtResource("6_b70dw")
 
 [node name="Geometría" type="Node3D" parent="." unique_id=1189026551]
 
@@ -72,3 +74,4 @@ offset_top = -0.0720005
 offset_right = 128.08795
 offset_bottom = 127.928
 texture = ExtResource("7_b70dw")
+[connection signal="color_changed" from="ColorPickerButton" to="Managers/PaintManager" method="_on_color_picker_button_color_changed"]

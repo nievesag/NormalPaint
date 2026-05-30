@@ -21,6 +21,7 @@ extends Node3D
 
 var _velocity: Vector3 = Vector3.ZERO
 var _pitch: float = 0.0
+@onready var original_transform : Transform3D = self.transform
 
 func _ready() -> void:
 	_pitch = rotation.x
@@ -29,6 +30,9 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed:
 		if event.physical_keycode == KEY_O:
 			_target_origin()
+			return
+		if event.physical_keycode == KEY_R:
+			_reset_transform()
 			return
 
 	if event is InputEventMouseMotion:
@@ -123,3 +127,7 @@ func _process(delta: float) -> void:
 	var displacement := _velocity * delta
 	global_position += displacement
 	orbit_target += displacement
+	
+func _reset_transform():
+	_target_origin()
+	self.transform = original_transform

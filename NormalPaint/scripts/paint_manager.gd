@@ -2,9 +2,10 @@ extends Node3D
 
 @export var camera : Camera3D 
 @export_range(0.1, 10000.0, 0.1) var ray_length: float = 10000.0
-
 @export var _meshInstance : MeshInstance3D
 @export var _textureDebug : TextureRect
+
+@onready var _colorpicker : ColorPickerButton = $"../../ColorPickerButton"
 
 var mdt: MeshDataTool
 
@@ -26,6 +27,9 @@ func _ready() -> void:
 	if _meshInstance == null:
 		print_debug("NO HAY MESHINSTANCE3D VÁLIDA ASIGNADA")
 		return
+	
+	if _colorpicker != null:
+		Global.foreground_color = _colorpicker.color
 	
 	mdt = MeshDataTool.new()
 	var mesh: Mesh = _meshInstance.mesh
@@ -253,3 +257,6 @@ func _raycast_uv(mouse_position: Vector2) -> void:
 #	var uv = (uv1 * bc.x) + (uv2 * bc.y) + (uv3 * bc.z)
 	#print("!!!!!!!!!!! UV", uv)
 	
+func _on_color_picker_button_color_changed(color: Color) -> void:
+	Global.foreground_color = color
+	pass # Replace with function body.

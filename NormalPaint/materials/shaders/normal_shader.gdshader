@@ -18,7 +18,7 @@ void fragment() {
 	
     vec3 nmap = texture(normal_tex, UV).rgb;
 
-    if (debug_view)
+    //if (debug_view)
 	{
         ALBEDO = nmap;
     } 
