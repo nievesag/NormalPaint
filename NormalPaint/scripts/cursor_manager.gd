@@ -4,7 +4,7 @@ func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
 
 func _process(delta: float) -> void:
-	self.position = self.get_global_mouse_position()
+	self.position = self.get_global_mouse_position() - self.size * 0.5
 	#cursor.pivot_offset = (cursor.size / 2.0)
 
 func resize_cursor(_size: float) -> void:
