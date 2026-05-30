@@ -1,3 +1,5 @@
+extends Node
+
 var foreground_color : Color
 
 var brush_mask: Image
