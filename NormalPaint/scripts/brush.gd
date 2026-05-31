@@ -1,7 +1,7 @@
 extends Node2D
 
 @export var texture: Texture2D # textura del pincel
-@export var brush_size: int = 10 # textura del pincel
+@export var brush_size: int = 50 # textura del pincel
 
 var brush_queue: Array[Variant] = []
 

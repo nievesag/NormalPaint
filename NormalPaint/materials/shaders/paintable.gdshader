@@ -8,6 +8,10 @@ void vertex() {
 }
 
 void fragment() {
-	// Called for every pixel the material is visible on.
-    ALBEDO = texture(main, UV).rgb * 0.5 + texture(paint, UV).rgb * 0.5;
+    vec4 main_tex = texture(main, UV);
+    vec4 paint_tex = texture(paint, UV);
+    
+    vec3 final = mix(main_tex.rgb, paint_tex.rgb, paint_tex.a);
+    
+    ALBEDO = final;
 }
