@@ -14,8 +14,9 @@ var _working_normal_map: ImageTexture
 
 func _ready() -> void:
 	pass
-	_apply_current_material()
-	_working_normal_map = _get_normal_map()
+	# pass
+	# _apply_current_material()
+	# _working_normal_map = _get_normal_map()
 #	if _working_normal_map != null:
 #		_set_normal_map(_working_normal_map)
 
