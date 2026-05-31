@@ -13,10 +13,11 @@ var _working_normal_map: ImageTexture
 
 
 func _ready() -> void:
+	pass
 	_apply_current_material()
 	_working_normal_map = _get_normal_map()
-	if _working_normal_map != null:
-		_set_normal_map(_working_normal_map)
+#	if _working_normal_map != null:
+#		_set_normal_map(_working_normal_map)
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("toggle_view"):
