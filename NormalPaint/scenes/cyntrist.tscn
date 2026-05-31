@@ -51,7 +51,6 @@ resource_local_to_scene = false
 viewport_path = NodePath("DrawViewport")
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_e4neo"]
-resource_local_to_scene = true
 render_priority = 0
 shader = SubResource("Shader_u6i0i")
 shader_parameter/main = SubResource("CompressedTexture2D_2hmkj")
@@ -230,9 +229,10 @@ script = ExtResource("21_snk0p")
 transparent_bg = true
 handle_input_locally = false
 size = Vector2i(128, 128)
-render_target_clear_mode = 1
+render_target_clear_mode = 2
 render_target_update_mode = 4
 script = ExtResource("22_2hmkj")
+paint_mat = SubResource("ShaderMaterial_e4neo")
 
 [node name="Brush" type="Node2D" parent="DrawViewport" unique_id=841120591]
 script = ExtResource("22_u6i0i")
