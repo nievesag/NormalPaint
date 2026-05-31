@@ -11,7 +11,7 @@ void fragment() {
     vec4 main_tex = texture(main, UV);
     vec4 paint_tex = texture(paint, UV);
     
-    vec3 final = mix(main_tex.rgb, paint_tex.rgb, 1.0 - paint_tex.a);
+    vec3 final = mix(main_tex.rgb, paint_tex.rgb, paint_tex.a);
     
     ALBEDO = final;
 }

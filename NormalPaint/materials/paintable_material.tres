@@ -1,0 +1,33 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://d4aklslum76v1"]
+
+[sub_resource type="Shader" id="Shader_u6i0i"]
+code = "shader_type spatial;
+
+uniform sampler2D main : source_color; 
+uniform sampler2D paint : source_color; 
+
+void vertex() {
+	// Called for every vertex the material is visible on.
+}
+
+void fragment() {
+    vec4 main_tex = texture(main, UV);
+    vec4 paint_tex = texture(paint, UV);
+    
+    vec3 final = mix(main_tex.rgb, paint_tex.rgb, paint_tex.a);
+    
+    ALBEDO = final;
+}"
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_2hmkj"]
+load_path = "res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.s3tc.ctex"
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_63tbu"]
+resource_local_to_scene = false
+viewport_path = NodePath("DrawViewport")
+
+[resource]
+render_priority = 0
+shader = SubResource("Shader_u6i0i")
+shader_parameter/main = SubResource("CompressedTexture2D_2hmkj")
+shader_parameter/paint = SubResource("ViewportTexture_63tbu")
