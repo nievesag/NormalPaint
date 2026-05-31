@@ -96,8 +96,8 @@ size_flags_vertical = 3
 
 [node name="ColorPickerButton" type="ColorPickerButton" parent="UI" unique_id=699014604]
 layout_mode = 1
-offset_right = 111.0
-offset_bottom = 33.0
+offset_right = 101.0
+offset_bottom = 98.0
 text = "Color Picker"
 icon_alignment = 1
 color = Color(0.80561507, 0.36098176, 0.518984, 1)

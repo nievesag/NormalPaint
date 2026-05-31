@@ -56,7 +56,7 @@ func _ready() -> void:
 	arrMesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, mesh.get_mesh_arrays())
 	
 	mdt.create_from_surface(arrMesh, 0) # rellena la info del meshdatatool con la data de la mesh especificada
-	_numFaces = mdt.get_vertex_count()
+	_numFaces = mdt.get_face_count()
 	_worldNormals.resize(_numFaces) # mismo numero de normales que de caras
 	
 	for i in range(_numFaces):
@@ -86,49 +86,40 @@ func _process(_delta: float) -> void:
 
 func _cart2bary(p : Vector3, a : Vector3, b : Vector3, c: Vector3) -> Vector3:
 	print_debug(a, " ", b, " ", c, " .. ", p)
-
 	var v0 := b - a
 	var v1 := c - a
-	#var v2 := p - a
+	var v2 := p - a
 
-	var pb := b - p
-	var pc := c - p
-	var pa := a - p
-
-	var cr: Vector3 = (v0.cross(v1))
-
-	var area: float = (cr).length() / 2
-	print_debug("AREAAAAA: ", area)
-
-	# https://math.stackexchange.com/questions/4322/check-whether-a-point-is-within-a-3d-triangle
-	
-	var alfa_cr: Vector3 = (pb.cross(pc))
-	
-	var beta_cr: Vector3 = (pc.cross(pa))
-	
-	var alfa: float = (alfa_cr).length() / 2 * area
-	var beta: float = (beta_cr).length()  / 2 * area
-	var gamma: float = 1.0 - alfa - beta
-
-
-	print_debug("peter: ", alfa, " ", beta, " ", gamma)
-
-	return Vector3(alfa, beta, gamma)
+#	var pb := b - p
+#	var pc := c - p
+#	var pa := a - p
+#	var cr: Vector3 = (v0.cross(v1))
+#	var area: float = (cr).length() / 2
+#	print_debug("AREAAAAA: ", area)
+#
+#	# https://math.stackexchange.com/questions/4322/check-whether-a-point-is-within-a-3d-triangle
+#	var alfa_cr: Vector3 = (pb.cross(pc))
+#	var beta_cr: Vector3 = (pc.cross(pa))
+#	var alfa: float = (alfa_cr).length() / 2 * area
+#	var beta: float = (beta_cr).length()  / 2 * area
+#	var gamma: float = 1.0 - alfa - beta
+#	print_debug("peter: ", alfa, " ", beta, " ", gamma)
+#	return Vector3(alfa, beta, gamma)
 	
 # https://github.com/Arnklit/WaterwaysDemo/blob/014c15121ddec26b5cab7f70218414bad0bb3b5d/addons/waterways/water_helper_methods.gd#L20
-#	var d00 := v0.dot(v0)
-#	var d01 := v0.dot(v1)
-#	var d11 := v1.dot(v1)
-#	var d20 := v2.dot(v0)
-#	var d21 := v2.dot(v1)
-#	var denom := d00 * d11 - d01 * d01
-#	var v: float = (d11 * d20 - d01 * d21) / denom
-#	var w: float = (d00 * d21 - d01 * d20) / denom
-#	var u: float = 1.0 - v - w
-#	var bc: Vector3 = Vector3(u, v, w)
+	var d00 := v0.dot(v0)
+	var d01 := v0.dot(v1)
+	var d11 := v1.dot(v1)
+	var d20 := v2.dot(v0)
+	var d21 := v2.dot(v1)
+	var denom := d00 * d11 - d01 * d01
+	var v: float = (d11 * d20 - d01 * d21) / denom
+	var w: float = (d00 * d21 - d01 * d20) / denom
+	var u: float = 1.0 - v - w
+	var bc: Vector3 = Vector3(u, v, w)
 #	print_debug(bc)
 #	print_debug("----------")
-#	return bc
+	return bc
 
 # https://blackpawn.com/texts/pointinpoly/
 #	var v0 := c - a
@@ -213,8 +204,6 @@ func _raycast_uv(mouse_position: Vector2) -> void:
 		print_debug("no se colisionó con nada")
 		return
 						# si se da a algo
-	print_debug("hitazo")
-	
 	var pos: Vector3 = hit["position"]
 	var nor: Vector3 = hit["normal"]
 	var coll: Object = hit["collider"] # el objeto asociado a ese collider
@@ -233,23 +222,46 @@ func _raycast_uv(mouse_position: Vector2) -> void:
 	if(mdt == null):
 		print("MeshDataTool null")
 		return
-	
-	var uv: Vector2 = Vector2()
-	var min_dist = INF # va guardando la distancia mas pequeña hasta el momento
-	
-	for i in range(0, _indices.size(), 3): # coge los indices de 3 en 3
-		for j in range(3): # recorre cada uno de los 3 vertices de una cara
-			var v = _indices[i + j] # coge el indice que estamos recorriendo del array de indices totales
-			var v_world = _meshInstance.global_transform * _vertices[v] # posicion en el mundo
-			var dist: float = to_global(pos).distance_to(v_world) # distancia entre el vertice que evaluo y la pos de colision del rayo
-			
-			if dist < min_dist: # si la nueva distancia calculada es menor que la ultima hasta ahora
-				min_dist = dist # se sobreescribe
-				uv = _uvs[v] # guardo la uv asociada a ese vertice
 
-	print("UV!!!!!!!!!!: ", uv)
-	if _shader_manager != null and _shader_manager.has_method("paint_at_uv"):
-		_shader_manager.call("paint_at_uv", uv)
+	var face_index_variant: Variant = hit.get("face_index", -1)
+	if face_index_variant is int:
+		var face_index: int = face_index_variant
+		if face_index >= 0 and face_index < mdt.get_face_count():
+			var i0: int = mdt.get_face_vertex(face_index, 0)
+			var i1: int = mdt.get_face_vertex(face_index, 1)
+			var i2: int = mdt.get_face_vertex(face_index, 2)
+
+			var p_local: Vector3 = _meshInstance.to_local(pos)
+			var a_local: Vector3 = mdt.get_vertex(i0)
+			var b_local: Vector3 = mdt.get_vertex(i1)
+			var c_local: Vector3 = mdt.get_vertex(i2)
+			var bc: Vector3 = _cart2bary(p_local, a_local, b_local, c_local)
+
+			var uv0: Vector2 = mdt.get_vertex_uv(i0)
+			var uv1: Vector2 = mdt.get_vertex_uv(i1)
+			var uv2: Vector2 = mdt.get_vertex_uv(i2)
+			var uv_from_face: Vector2 = uv0 * bc.x + uv1 * bc.y + uv2 * bc.z
+			print("UV!!!!!!!!!! ", uv_from_face)
+			if _shader_manager != null and _shader_manager.has_method("paint_at_uv"):
+				_shader_manager.call("paint_at_uv", uv_from_face)
+			return
+	
+#	var uv: Vector2 = Vector2()
+#	var min_dist = INF # va guardando la distancia mas pequeña hasta el momento
+#	
+#	for i in range(0, _indices.size(), 3): # coge los indices de 3 en 3
+#		for j in range(3): # recorre cada uno de los 3 vertices de una cara
+#			var v = _indices[i + j] # coge el indice que estamos recorriendo del array de indices totales
+#			var v_world = _meshInstance.global_transform * _vertices[v] # posicion en el mundo
+#			var dist: float = to_global(pos).distance_to(v_world) # distancia entre el vertice que evaluo y la pos de colision del rayo
+#			
+#			if dist < min_dist: # si la nueva distancia calculada es menor que la ultima hasta ahora
+#				min_dist = dist # se sobreescribe
+#				uv = _uvs[v] # guardo la uv asociada a ese vertice
+#
+#	print("UV!!!!!!!!!!: ", uv)
+#	if _shader_manager != null and _shader_manager.has_method("paint_at_uv"):
+#		_shader_manager.call("paint_at_uv", uv)
 		
 #	var face: Array = _get_face_info(to_global(pos), to_global(nor))
 #	
@@ -268,8 +280,4 @@ func _raycast_uv(mouse_position: Vector2) -> void:
 	
 func _on_color_picker_button_color_changed(color: Color) -> void:
 	Global.foreground_color = color
-	pass # Replace with function body.
-
-
-func _on_button_toggled(toggled_on: bool, extra_arg_0: int, extra_arg_1: String) -> void:
 	pass # Replace with function body.
