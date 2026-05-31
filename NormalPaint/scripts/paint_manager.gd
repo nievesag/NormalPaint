@@ -85,7 +85,7 @@ func _process(_delta: float) -> void:
 		_raycast_uv(get_viewport().get_mouse_position())
 
 func _cart2bary(p : Vector3, a : Vector3, b : Vector3, c: Vector3) -> Vector3:
-	print_debug(a, " ", b, " ", c, " .. ", p)
+#	print_debug(a, " ", b, " ", c, " .. ", p)
 	var v0 := b - a
 	var v1 := c - a
 	var v2 := p - a
@@ -163,7 +163,7 @@ func _cart2bary(p : Vector3, a : Vector3, b : Vector3, c: Vector3) -> Vector3:
 func _is_point_in_triangle(point, v1, v2, v3) -> Vector3:
 	var bc: Vector3 = _cart2bary(point, v1, v2, v3)
 	var sum: float = round(bc.x + bc.y + bc.z)
-	print_debug("suma ", sum)
+#	print_debug("suma ", sum)
 	if (bc.x >= 0 && bc.x <= 1) && (bc.y >= 0 && bc.y <= 1) && (bc.z >= 0 && bc.z <= 1) && (sum == 1):
 		return bc
 	
@@ -207,9 +207,9 @@ func _raycast_uv(mouse_position: Vector2) -> void:
 	var pos: Vector3 = hit["position"]
 	var nor: Vector3 = hit["normal"]
 	var coll: Object = hit["collider"] # el objeto asociado a ese collider
-	print("position ", pos)
-	print("normal ", nor)
-	print("collider ", coll)
+#	print("position ", pos)
+#	print("normal ", nor)
+#	print("collider ", coll)
 	
 	if(_meshInstance == null):
 		print("mesh instance null")
@@ -241,7 +241,7 @@ func _raycast_uv(mouse_position: Vector2) -> void:
 			var uv1: Vector2 = mdt.get_vertex_uv(i1)
 			var uv2: Vector2 = mdt.get_vertex_uv(i2)
 			var uv_from_face: Vector2 = uv0 * bc.x + uv1 * bc.y + uv2 * bc.z
-			print("UV!!!!!!!!!! ", uv_from_face)
+#			print("UV!!!!!!!!!! ", uv_from_face)
 			if _shader_manager != null and _shader_manager.has_method("paint_at_uv"):
 				_shader_manager.call("paint_at_uv", uv_from_face)
 			return

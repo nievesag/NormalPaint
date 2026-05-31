@@ -15,12 +15,14 @@ void fragment() {
 	//vec3 normal = normalize((MODEL_MATRIX * vec4(NORMAL, 0.0)).xyz);
 	//vec3 world_normal = (INV_VIEW_MATRIX * vec4(normal, 0.0)).xyz;
 	//ALBEDO = normalize(world_normal);
-	
+	vec4 albedo = texture(albedo_texture, UV);
     vec3 nmap = texture(normal_tex, UV).rgb;
 
     //if (debug_view)
 	{
-        ALBEDO = nmap;
+        ALBEDO = albedo.rgb;
+		NORMAL_MAP = nmap;
+		NORMAL_MAP_DEPTH = 1.0;
     } 
 	//else 
 	//{

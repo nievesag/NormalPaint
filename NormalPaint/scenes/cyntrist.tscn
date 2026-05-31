@@ -5,7 +5,6 @@
 [ext_resource type="Script" uid="uid://dxqfd2g57esxl" path="res://scripts/shader_manager.gd" id="2_k55y0"]
 [ext_resource type="Script" uid="uid://dx1fl7e5fcsya" path="res://scripts/paint_manager.gd" id="3_13p4k"]
 [ext_resource type="Material" uid="uid://fq5grap05sps" path="res://materials/texture_material.tres" id="3_j4ag4"]
-[ext_resource type="Texture2D" uid="uid://bnlij0pmavdcs" path="res://assets/textures/normals/flat_normal_map.png" id="5_06k3k"]
 [ext_resource type="Image" uid="uid://cd6688und1psh" path="res://assets/images/brushes/mask03.png" id="7_mu7j6"]
 [ext_resource type="Script" uid="uid://cpkp8thw4oeoo" path="res://scripts/cursor_manager.gd" id="7_w3vxh"]
 [ext_resource type="Texture2D" uid="uid://uo5ifxequu4m" path="res://assets/textures/brushes/brush01.png" id="8_63kvh"]
@@ -43,7 +42,6 @@ script = ExtResource("2_k55y0")
 subject = NodePath("../../Geometría/Meshes/StaticBody3D/MeshInstance3D")
 texture_material = ExtResource("3_j4ag4")
 normal_material = ExtResource("1_rib1n")
-default_normal_map = ExtResource("5_06k3k")
 
 [node name="Cursor" type="TextureRect" parent="Managers" unique_id=847224818]
 texture_filter = 1
@@ -80,7 +78,14 @@ shape = SubResource("ConcavePolygonShape3D_rib1n")
 [node name="Luces" type="Node3D" parent="." unique_id=503148740]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Luces" unique_id=1724261099]
+process_mode = 4
 transform = Transform3D(0.23514207, 0, -0.971961, 0, 1, 0, 0.971961, 0, 0.23514207, -2.9567723, 0, 0)
+
+[node name="SpotLight3D" type="SpotLight3D" parent="Luces" unique_id=356171889]
+process_mode = 4
+transform = Transform3D(1, 0, 0, 0, 0.83562523, 0.54929996, 0, -0.54929996, 0.83562523, 0, 0.9735434, 2.1212175)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Luces" unique_id=1874217931]
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1057172272]
 transform = Transform3D(0.7071068, -0.4055798, 0.579228, 0, 0.81915206, 0.57357645, -0.7071068, -0.4055798, 0.579228, 2, 2, 2)
@@ -126,7 +131,7 @@ offset_bottom = 72.07502
 grow_horizontal = 0
 min_value = 10.0
 max_value = 1000.0
-value = 10.0
+value = 100.0
 script = ExtResource("8_vxgas")
 cursor = NodePath("../../Managers/Cursor")
 
@@ -136,7 +141,7 @@ anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
 offset_left = -144.0
-offset_bottom = 182.0
+offset_bottom = 654.0
 grow_horizontal = 0
 horizontal_scroll_mode = 0
 

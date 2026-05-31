@@ -71,6 +71,7 @@ func _set_normal_map(tex: ImageTexture) -> void:
 
 	if normal_material != null:
 		normal_material.set_shader_parameter("normal_tex", tex)
+		normal_material.set_shader_parameter("albedo_texture", tex)
 		
 func paint_at_uv(uv: Vector2, color: Color = Global.foreground_color) -> void:
 	if _working_normal_map == null:
