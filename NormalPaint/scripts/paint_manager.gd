@@ -108,7 +108,7 @@ func _cart2bary(p : Vector3, a : Vector3, b : Vector3, c: Vector3) -> Vector3:
 func _is_point_in_triangle(point, v1, v2, v3) -> Vector3:
 	var bc: Vector3 = _cart2bary(point, v1, v2, v3)
 	var sum: float = round(bc.x + bc.y + bc.z)
-	print_debug("suma ", sum)
+#	print_debug("suma ", sum)
 	if (bc.x >= 0 && bc.x <= 1) && (bc.y >= 0 && bc.y <= 1) && (bc.z >= 0 && bc.z <= 1) && (sum == 1):
 		return bc
 	
@@ -190,6 +190,42 @@ func _raycast_uv(mouse_position: Vector2) -> void:
 #			if _shader_manager != null and _shader_manager.has_method("paint_at_uv"):
 #				_shader_manager.call("paint_at_uv", uv_from_face)
 #			return
+#			print("UV!!!!!!!!!! ", uv_from_face)
+#			if _shader_manager != null and _shader_manager.has_method("paint_at_uv"):
+#				_shader_manager.call("paint_at_uv", uv_from_face)
+#			return
+	
+#	var uv: Vector2 = Vector2()
+#	var min_dist = INF # va guardando la distancia mas pequeña hasta el momento
+#	
+#	for i in range(0, _indices.size(), 3): # coge los indices de 3 en 3
+#		for j in range(3): # recorre cada uno de los 3 vertices de una cara
+#			var v = _indices[i + j] # coge el indice que estamos recorriendo del array de indices totales
+#			var v_world = _meshInstance.global_transform * _vertices[v] # posicion en el mundo
+#			var dist: float = to_global(pos).distance_to(v_world) # distancia entre el vertice que evaluo y la pos de colision del rayo
+#			
+#			if dist < min_dist: # si la nueva distancia calculada es menor que la ultima hasta ahora
+#				min_dist = dist # se sobreescribe
+#				uv = _uvs[v] # guardo la uv asociada a ese vertice
+#
+#	print("UV!!!!!!!!!!: ", uv)
+#	if _shader_manager != null and _shader_manager.has_method("paint_at_uv"):
+#		_shader_manager.call("paint_at_uv", uv)
+		
+#	var face: Array = _get_face_info(to_global(pos), to_global(nor))
+#	
+#	if !face:
+#		print("face null")
+#		return
+#
+#	var bc = face[2]
+#	
+#	var uv1: Vector2 = mdt.get_vertex_uv(_localFaceVertices[face[0]][0]) # vertice 0 de la cara
+#	var uv2: Vector2 = mdt.get_vertex_uv(_localFaceVertices[face[0]][1]) # vertice 1 de la cara
+#	var uv3: Vector2 = mdt.get_vertex_uv(_localFaceVertices[face[0]][2]) # vertice 2 de la cara
+#
+#	var uv = (uv1 * bc.x) + (uv2 * bc.y) + (uv3 * bc.z)
+	#print("!!!!!!!!!!! UV", uv)
 	
 func _on_color_picker_button_color_changed(color: Color) -> void:
 	Global.foreground_color = color

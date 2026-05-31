@@ -3,6 +3,11 @@ extends SpinBox
 @export_category("Cursor")
 @export var cursor: TextureRect
 
+func _ready() -> void:
+	Global.brush_size = self.value
+	resize_brush(self.value)
+	pass
+
 func resize_brush(_value: float) -> void:
 	Global.brush_size = round(_value)
 	
