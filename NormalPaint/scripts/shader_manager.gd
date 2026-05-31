@@ -119,8 +119,8 @@ func _paint_mask_in_image(texture: ImageTexture, uv: Vector2, color: Color) -> I
 	# lo qeu acabará siendo el shader de cómputo
 	for y in range(cy - half, cy + half):
 		for x in range(cx - half, cx + half):
-			if x < 0 or y < 0 or x >= w or y >= h: # si se sale no hacer nada
-				continue
+			var px := posmod(x, w) #funcion de autowrap increible
+			var py := posmod(y, h)
 
 			#pos local del píxel actual dentro del cuadrado del pincel
 			# cx - half / cy - half es la esquina superior izquierda del area a pintar en principio
@@ -143,8 +143,8 @@ func _paint_mask_in_image(texture: ImageTexture, uv: Vector2, color: Color) -> I
 			if mask_value <= 0.0: #si no hace nada
 				continue
 
-			var base := image.get_pixel(x, y) #pixel original
-			image.set_pixel(x, y, base.lerp(color, mask_value)) #blendeo con el pixel calculado de la mascara en funcion de su fuerza
+			var base := image.get_pixel(px, py) #pixel original
+			image.set_pixel(px, py, base.lerp(color, mask_value)) #blendeo con el pixel calculado de la mascara en funcion de su fuerza
 
 	texture.update(image) #reemplazamos textura
 	return texture
