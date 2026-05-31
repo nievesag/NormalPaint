@@ -186,14 +186,10 @@ func _raycast_uv(mouse_position: Vector2) -> void:
 			var uv_from_face: Vector2 = uv0 * bc.x + uv1 * bc.y + uv2 * bc.z
 			print("UV!!!!!!!!!! ", uv_from_face)
 			
-			draw_viewport.paint(uv_from_face, Global.foreground_color)
-#			if _shader_manager != null and _shader_manager.has_method("paint_at_uv"):
-#				_shader_manager.call("paint_at_uv", uv_from_face)
-#			return
-#			print("UV!!!!!!!!!! ", uv_from_face)
-#			if _shader_manager != null and _shader_manager.has_method("paint_at_uv"):
-#				_shader_manager.call("paint_at_uv", uv_from_face)
-#			return
+			#draw_viewport.paint(uv_from_face, Global.foreground_color)
+			if _shader_manager != null and _shader_manager.has_method("paint_at_uv"):
+				_shader_manager.call("paint_at_uv", uv_from_face)
+			return
 	
 #	var uv: Vector2 = Vector2()
 #	var min_dist = INF # va guardando la distancia mas pequeña hasta el momento
