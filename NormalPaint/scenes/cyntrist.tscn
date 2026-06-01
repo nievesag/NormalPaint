@@ -224,7 +224,7 @@ image_n = ExtResource("9_2bale")
 image_total = ExtResource("22_7rgns")
 
 [node name="OutputSprite2D" type="Sprite2D" parent="Compute" unique_id=1710879059]
-position = Vector2(213, 477)
+position = Vector2(174, 296)
 scale = Vector2(0.16003418, 0.15539554)
 texture = ExtResource("21_63tbu")
 
