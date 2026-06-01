@@ -16,11 +16,14 @@ var _working_albedo_tex: ImageTexture
 func _ready() -> void:
 	if texture_material != null:
 		texture_material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR
-	_apply_current_material()
-	_working_normal_map = _get_normal_map()
 	_working_albedo_tex = _get_albedo()
+	_working_normal_map = _get_normal_map()
+	if _working_albedo_tex != null:
+		_set_albedo(_working_albedo_tex)
 	if _working_normal_map != null:
 		_set_normal_map(_working_normal_map)
+	_apply_current_material()
+
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("toggle_view"):
@@ -50,7 +53,20 @@ func _get_normal_map() -> ImageTexture:
 		return null
 
 	#buscamos el mapa de normales en el material de textura
-	var normal_map := texture_material.get_texture(BaseMaterial3D.TEXTURE_NORMAL) as ImageTexture
+	var normal_tex := texture_material.get_texture(BaseMaterial3D.TEXTURE_NORMAL)
+	var normal_map: ImageTexture = null
+	if normal_tex is ImageTexture:
+		normal_map = normal_tex as ImageTexture
+	elif normal_tex != null:
+		var normal_image := normal_tex.get_image()
+		if normal_image != null:
+			if normal_image.is_compressed():
+				normal_image.decompress()
+			if normal_image.get_format() != Image.FORMAT_RGBA8:
+				normal_image.convert(Image.FORMAT_RGBA8)
+			normal_map = ImageTexture.create_from_image(normal_image)
+			_set_normal_map(normal_map)
+
 	if normal_map == null:
 		print_debug("La mesh no tiene normal map, creandolo")
 		if default_normal_map == null: # si no existe ni la textura default se crea una
