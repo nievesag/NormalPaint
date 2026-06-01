@@ -208,6 +208,14 @@ brush_mask = ExtResource("15_3habk")
 cursor = NodePath("../../../Cursor")
 brush_cursor = ExtResource("20_5w7x6")
 
+[node name="CheckBox" type="CheckBox" parent="UI" unique_id=1611942139]
+layout_mode = 0
+offset_left = 112.0
+offset_top = 10.0
+offset_right = 342.0
+offset_bottom = 41.0
+text = "Pintado en ambos canales"
+
 [node name="Compute" type="Node" parent="." unique_id=1091607393]
 script = ExtResource("21_snk0p")
 
@@ -231,3 +239,4 @@ texture = ExtResource("23_2hmkj")
 [connection signal="pressed" from="UI/ScrollContainer/VBoxContainer/Button2" to="UI/ScrollContainer/VBoxContainer/Button2" method="select_brush"]
 [connection signal="pressed" from="UI/ScrollContainer/VBoxContainer/Button3" to="UI/ScrollContainer/VBoxContainer/Button3" method="select_brush"]
 [connection signal="pressed" from="UI/ScrollContainer/VBoxContainer/Button4" to="UI/ScrollContainer/VBoxContainer/Button4" method="select_brush"]
+[connection signal="toggled" from="UI/CheckBox" to="Managers/PaintManager" method="_on_check_box_toggled"]

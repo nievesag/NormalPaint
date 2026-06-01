@@ -118,27 +118,31 @@ func _set_albedo(tex: ImageTexture) -> void:
 		texture_material.set_texture(BaseMaterial3D.TEXTURE_ALBEDO, tex)
 
 
-func paint_at_uv(uv: Vector2, color: Color = Global.primary_color) -> void:
-	color = Global.primary_color if not _showing_normal else Global.secondary_color
-	if _showing_normal: # pintamos mapa de normales
-		if _working_normal_map == null:
-			return
-
-		_working_normal_map = _paint_mask_in_image(_working_normal_map, uv, color)
-		if _working_normal_map == null:
-			return
-		_set_normal_map(_working_normal_map)
-	else: #pintamos textura
-		if _working_albedo_tex == null:
-			return
-	
-		_working_albedo_tex = _paint_mask_in_image(_working_albedo_tex, uv, color)
-		if _working_albedo_tex == null:
-			return
+func paint_at_uv(uv: Vector2) -> void:
+	if Global.paint_both:
+		if _working_albedo_tex == null: return
+		_working_albedo_tex = _paint_mask_in_image(_working_albedo_tex, uv, Global.primary_color)
+		if _working_albedo_tex == null: return
 		_set_albedo(_working_albedo_tex)
-		pass
-
-
+		if _working_normal_map == null: return
+		_working_normal_map = _paint_mask_in_image(_working_normal_map, uv, Global.secondary_color)
+		if _working_normal_map == null: return
+		_set_normal_map(_working_normal_map)
+		return
+		
+	if _showing_normal: # pintamos mapa de normales
+		if _working_normal_map == null: return
+		_working_normal_map = _paint_mask_in_image(_working_normal_map, uv, Global.secondary_color)
+		if _working_normal_map == null: return
+		_set_normal_map(_working_normal_map)
+		return
+	
+	#pintamos textura
+	if _working_albedo_tex == null: return
+	_working_albedo_tex = _paint_mask_in_image(_working_albedo_tex, uv, Global.primary_color)
+	if _working_albedo_tex == null: return
+	_set_albedo(_working_albedo_tex)
+		
 #método para pintar la máscara de pincel actual en una posición uv de la textura dada con un color para la máscara
 func _paint_mask_in_image(texture: ImageTexture, uv: Vector2, color: Color) -> ImageTexture:
 	#programacion defensiva
@@ -169,18 +173,18 @@ func _paint_mask_in_image(texture: ImageTexture, uv: Vector2, color: Color) -> I
 	var cy := uv.y * float(h)
 	var size := maxf(1.0, Global.brush_size)  #para que no pueda ser 0 y ademas tratamos brush size como radio (no se si esta bien pero me venía de refactorizarlo de la ecuación del círculo
 	var diameter := size * 2
-	var half:= size
+	var radius:= size
 
 	# lo qeu acabará siendo el shader de cómputo
-	for y in range(cy - half, cy + half):
-		for x in range(cx - half, cx + half):
+	for y in range(cy - radius, cy + radius):
+		for x in range(cx - radius, cx + radius):
 			var px := posmod(x, w) #funcion de autowrap increible
 			var py := posmod(y, h)
 
 			#pos local del píxel actual dentro del cuadrado del pincel
 			# cx - half / cy - half es la esquina superior izquierda del area a pintar en principio
-			var local_x := x - (cx - half)
-			var local_y := y - (cy - half)
+			var local_x := x - (cx - radius)
+			var local_y := y - (cy - radius)
 			
 			#normalizamos la pos local dentro de 0-1
 			# maxi evita dividir entre 0 si el diametro fuese 1

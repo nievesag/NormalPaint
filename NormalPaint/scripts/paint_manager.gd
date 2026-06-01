@@ -234,3 +234,8 @@ func _on_primary_color_changed(color: Color) -> void:
 func _on_secondary_color_changed(color: Color) -> void:
 	Global.secondary_color = color
 	pass # Replace with function body.
+
+
+func _on_check_box_toggled(toggled_on: bool) -> void:
+	Global.paint_both = toggled_on
+	pass # Replace with function body.
