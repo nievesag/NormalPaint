@@ -19,7 +19,7 @@ layout(set = 0, binding = 1, rgba32f) uniform image2D image; // mascara
 
 layout(set = 0, binding = 2, rgba32f) uniform image2D image_1; // textura
 
-layout(local_size_x = 8, local_size_y = 8, local_size_z = 1) in;
+layout(local_size_x = 32, local_size_y = 32, local_size_z = 1) in;
 
 void main() {
     ivec2 local = ivec2(gl_GlobalInvocationID.xy);

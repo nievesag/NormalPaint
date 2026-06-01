@@ -31,9 +31,9 @@ func _ready():
 	var mask_h := Global.brush_mask.get_height()
 	
 	# escalamos la uv a coordenadas sobre la textura real y las usamos como centro de la "circunferencia"
-	var cx := 0.5 * float(image_n.get_width())
-	var cy := 0.5 * float(image_n.get_height())
-	var size := maxf(1.0, Global.brush_size)  #para que no pueda ser 0 y ademas tratamos brush size como radio (no se si esta bien pero me venía de refactorizarlo de la ecuación del círculo
+	var cx := 0.5 * float(image_n.get_width()) # 0.5 es la u
+	var cy := 0.5 * float(image_n.get_height()) # 0.5 es la v
+	var size := maxf(1.0, Global.brush_size * 2)  #para que no pueda ser 0 y ademas tratamos brush size como radio (no se si esta bien pero me venía de refactorizarlo de la ecuación del círculo
 	var diameter := size
 	var radius := size * 0.5
 	var color : Color;
@@ -109,7 +109,7 @@ func _compute(storage_buffer: RID, texture: RID, texture_1: RID):
 
 	rd.compute_list_bind_compute_pipeline(compute_list, pipeline)
 	rd.compute_list_bind_uniform_set(compute_list, uniform_set, 0)
-	rd.compute_list_dispatch(compute_list, ceil(Global.brush_size / 8.0), ceil(Global.brush_size / 8.0), 1) # ejecuta el shader, settea el num de work groups
+	rd.compute_list_dispatch(compute_list, image_total.get_width(), image_total.get_width(), 1) # ejecuta el shader, settea el num de work groups
 	rd.compute_list_end()
 	
 	var texture_rd := Texture2DRD.new()
