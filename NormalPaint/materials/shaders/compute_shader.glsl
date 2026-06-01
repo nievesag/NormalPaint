@@ -11,9 +11,13 @@ layout(set = 0, binding = 0, std430) readonly buffer parameters {
     float diameter;
     float radius;
     float brush_strength;
-    vec4 brush_color;
 }
 params;
+
+layout(set = 0, binding = 3, std430) buffer parameters_1 {
+    vec4 brush_color;
+}
+params_1;
 
 layout(set = 0, binding = 1, rgba32f) uniform image2D image; // mascara
 
@@ -51,8 +55,8 @@ void main() {
 
     // -------
     vec4 base = imageLoad(image_1, ivec2(px, py));
-    vec3 output_color = mix(base.rgb, params.brush_color.rgb, mask_value);
-    vec4 o = vec4(params.brush_color.r, params.brush_color.g, params.brush_color.b, 1.0);
+    vec3 output_color = mix(base.rgb, params_1.brush_color.rgb, mask_value);
+    vec4 o = vec4(params_1.brush_color.r, params_1.brush_color.g, params_1.brush_color.b, 1.0);
     imageStore(image_1, ivec2(px, py), o);
 
     //vec4 color = imageLoad(image, uv);
