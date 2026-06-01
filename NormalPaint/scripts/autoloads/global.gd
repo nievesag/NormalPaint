@@ -1,6 +1,7 @@
 extends Node
 
-var foreground_color : Color
+var primary_color : Color
+var secondary_color : Color
 
 var brush_mask: Image
 var brush_size: float = 10

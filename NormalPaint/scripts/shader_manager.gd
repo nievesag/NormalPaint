@@ -118,7 +118,8 @@ func _set_albedo(tex: ImageTexture) -> void:
 		texture_material.set_texture(BaseMaterial3D.TEXTURE_ALBEDO, tex)
 
 
-func paint_at_uv(uv: Vector2, color: Color = Global.foreground_color) -> void:
+func paint_at_uv(uv: Vector2, color: Color = Global.primary_color) -> void:
+	color = Global.primary_color if not _showing_normal else Global.secondary_color
 	if _showing_normal: # pintamos mapa de normales
 		if _working_normal_map == null:
 			return

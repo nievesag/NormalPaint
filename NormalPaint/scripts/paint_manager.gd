@@ -7,7 +7,8 @@ extends Node3D
 @export var _shader_manager: Node
 
 @export_category("Color")
-@onready var _colorpicker : ColorPickerButton = $"../../UI/ColorPickerButton"
+@export var _primary_colorpicker : ColorPickerButton
+@export var _secondary_colorpicker : ColorPickerButton
 
 @export_category("Pinceles")
 @export var default_brush_mask: Image # mascara asociada a este pincel
@@ -35,9 +36,11 @@ func _ready() -> void:
 		print_debug("NO HAY MESHINSTANCE3D VÁLIDA ASIGNADA")
 		return
 	
-	if _colorpicker != null:
-		Global.foreground_color = _colorpicker.color
-		
+	if _primary_colorpicker != null:
+		Global.primary_color = _primary_colorpicker.color
+	if _secondary_colorpicker != null:
+		Global.secondary_color = _secondary_colorpicker.color	
+	
 	Global.brush_mask = default_brush_mask
 	
 	mdt = MeshDataTool.new()
@@ -223,6 +226,11 @@ func _raycast_uv(mouse_position: Vector2) -> void:
 #	var uv = (uv1 * bc.x) + (uv2 * bc.y) + (uv3 * bc.z)
 	#print("!!!!!!!!!!! UV", uv)
 	
-func _on_color_picker_button_color_changed(color: Color) -> void:
-	Global.foreground_color = color
+func _on_primary_color_changed(color: Color) -> void:
+	Global.primary_color = color
 	pass
+
+
+func _on_secondary_color_changed(color: Color) -> void:
+	Global.secondary_color = color
+	pass # Replace with function body.
