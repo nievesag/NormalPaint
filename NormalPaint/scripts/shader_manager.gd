@@ -10,11 +10,15 @@ var _showing_normal := false
 @export var default_normal_map: Image
 @export var texture_size := Vector2i(1024, 1024)
 var _working_normal_map: ImageTexture
+var _working_albedo_tex: ImageTexture
 
 
 func _ready() -> void:
+	if texture_material != null:
+		texture_material.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR
 	_apply_current_material()
 	_working_normal_map = _get_normal_map()
+	_working_albedo_tex = _get_albedo()
 	if _working_normal_map != null:
 		_set_normal_map(_working_normal_map)
 
@@ -73,18 +77,49 @@ func _set_normal_map(tex: ImageTexture) -> void:
 		normal_material.set_shader_parameter("normal_tex", tex)
 		normal_material.set_shader_parameter("albedo_texture", tex)
 		
-func paint_at_uv(uv: Vector2, color: Color = Global.foreground_color) -> void:
-	if _working_normal_map == null:
-		_working_normal_map = _get_normal_map()
-	if _working_normal_map == null:
+func _get_albedo() -> ImageTexture:
+	if texture_material == null:
 		return
+	var albedo_tex := texture_material.get_texture(BaseMaterial3D.TEXTURE_ALBEDO)
+	if albedo_tex == null:
+		return null
+	if albedo_tex is ImageTexture:
+		return albedo_tex as ImageTexture
 
-	var painted_normal_map := _paint_mask_in_image(_working_normal_map, uv, color)
-	if painted_normal_map == null:
+	var image := albedo_tex.get_image()
+	if image == null:
+		return null
+	if image.is_compressed():
+		image.decompress()
+	return ImageTexture.create_from_image(image)
+
+func _set_albedo(tex: ImageTexture) -> void:
+	#programacion defensiva
+	if tex == null:
+		push_error("Se esta intentando aplicar una textura nula")
 		return
+	if texture_material != null:
+		texture_material.set_texture(BaseMaterial3D.TEXTURE_ALBEDO, tex)
+
+
+func paint_at_uv(uv: Vector2, color: Color = Global.foreground_color) -> void:
+	if _showing_normal: # pintamos mapa de normales
+		if _working_normal_map == null:
+			return
+
+		_working_normal_map = _paint_mask_in_image(_working_normal_map, uv, color)
+		if _working_normal_map == null:
+			return
+		_set_normal_map(_working_normal_map)
+	else: #pintamos textura
+		if _working_albedo_tex == null:
+			return
 	
-	_working_normal_map = painted_normal_map
-	_set_normal_map(_working_normal_map)
+		_working_albedo_tex = _paint_mask_in_image(_working_albedo_tex, uv, color)
+		if _working_albedo_tex == null:
+			return
+		_set_albedo(_working_albedo_tex)
+		pass
 
 
 #método para pintar la máscara de pincel actual en una posición uv de la textura dada con un color para la máscara
@@ -98,6 +133,9 @@ func _paint_mask_in_image(texture: ImageTexture, uv: Vector2, color: Color) -> I
 	if image == null:
 		push_error("Imagen de textura nula")
 		return null
+	
+	if image.is_compressed():
+		image.decompress()
 
 	if Global.brush_mask == null:
 		push_error("Mascara de pincel nula")

@@ -1,9 +1,7 @@
 [gd_resource type="StandardMaterial3D" format=3 uid="uid://fq5grap05sps"]
 
-[ext_resource type="Texture2D" uid="uid://c1tp7pqe622b5" path="res://icon.svg" id="1_8bba2"]
-[ext_resource type="Texture2D" uid="uid://bnlij0pmavdcs" path="res://assets/textures/normals/flat_normal_map.png" id="2_m6a5e"]
+[ext_resource type="Texture2D" uid="uid://oiwbamt2mjtn" path="res://assets/textures/icon.png" id="1_m6a5e"]
 
 [resource]
-albedo_texture = ExtResource("1_8bba2")
+albedo_texture = ExtResource("1_m6a5e")
 normal_enabled = true
-normal_texture = ExtResource("2_m6a5e")
