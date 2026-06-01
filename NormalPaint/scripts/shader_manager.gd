@@ -172,13 +172,13 @@ func _paint_mask_in_image(texture: ImageTexture, uv: Vector2, color: Color) -> I
 	var cx := uv.x * float(w)
 	var cy := uv.y * float(h)
 	var size := maxf(1.0, Global.brush_size)  #para que no pueda ser 0 y ademas tratamos brush size como radio (no se si esta bien pero me venía de refactorizarlo de la ecuación del círculo
-	var diameter := size * 2
-	var radius:= size
+	var diameter := size
+	var radius := size * 0.5
 
-	# lo qeu acabará siendo el shader de cómputo
+	# lo que acabará siendo el shader de cómputo
 	for y in range(cy - radius, cy + radius):
 		for x in range(cx - radius, cx + radius):
-			var px := posmod(x, w) #funcion de autowrap increible
+			var px := posmod(x, w) # funcion de autowrap increible
 			var py := posmod(y, h)
 
 			#pos local del píxel actual dentro del cuadrado del pincel
@@ -187,7 +187,7 @@ func _paint_mask_in_image(texture: ImageTexture, uv: Vector2, color: Color) -> I
 			var local_y := y - (cy - radius)
 			
 			#normalizamos la pos local dentro de 0-1
-			# maxi evita dividir entre 0 si el diametro fuese 1
+			# max evita dividir entre 0 si el diametro fuese 1
 			var u := clampf(float(local_x) / float(max(1, diameter - 1)), 0.0, 1.0)
 			var v := clampf(float(local_y) / float(max(1, diameter - 1)), 0.0, 1.0)
 			

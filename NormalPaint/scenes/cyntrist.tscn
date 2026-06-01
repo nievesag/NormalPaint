@@ -22,6 +22,7 @@
 [ext_resource type="Texture2D" uid="uid://bnlij0pmavdcs" path="res://assets/textures/normals/flat_normal_map.png" id="21_63tbu"]
 [ext_resource type="Script" uid="uid://dekg6xjeoogqt" path="res://scenes/compute_paint.gd" id="21_snk0p"]
 [ext_resource type="Script" uid="uid://cbwdv3pb5ub0b" path="res://scripts/draw_viewport.gd" id="22_2hmkj"]
+[ext_resource type="Image" uid="uid://pa0j7iux2yrp" path="res://assets/images/normals/sphere_normal_map.png" id="22_7rgns"]
 [ext_resource type="Material" uid="uid://d4aklslum76v1" path="res://materials/paintable_material.tres" id="22_63tbu"]
 [ext_resource type="Script" uid="uid://dj4nj5yx7orls" path="res://scripts/brush.gd" id="22_u6i0i"]
 [ext_resource type="Texture2D" uid="uid://dljft2okay16e" path="res://assets/textures/brush_prueba.png" id="23_2hmkj"]
@@ -219,10 +220,12 @@ text = "Pintado en ambos canales"
 
 [node name="Compute" type="Node" parent="." unique_id=1091607393]
 script = ExtResource("21_snk0p")
+image_n = ExtResource("9_2bale")
+image_total = ExtResource("22_7rgns")
 
 [node name="OutputSprite2D" type="Sprite2D" parent="Compute" unique_id=1710879059]
-position = Vector2(176, 61)
-scale = Vector2(0.09741211, 0.092041045)
+position = Vector2(208.0625, 93.4375)
+scale = Vector2(0.16003418, 0.15539554)
 texture = ExtResource("21_63tbu")
 
 [node name="DrawViewport" type="SubViewport" parent="." unique_id=210717543]
