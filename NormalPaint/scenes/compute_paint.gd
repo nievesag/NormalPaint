@@ -12,54 +12,67 @@ var shader
 var pipeline
 var buffer
 
-var texture: ImageTexture
+#@export var texture: ImageTexture
 var texture_path: String
 
-#func _ready():
-#	rd = RenderingServer.create_local_rendering_device()
-#
-#	# carga shader
-#	var shader_file := load("res://materials/shaders/compute_shader.glsl")
-#	# compila shader
-#	var shader_spirv: RDShaderSPIRV = shader_file.get_spirv()
-#	shader = rd.shader_create_from_spirv(shader_spirv)
-#	# shader pipeline
-#	pipeline = rd.compute_pipeline_create(shader)
-#	
-#	var image = texture.get_image()
-#	image.convert(Image.FORMAT_RGBAF)
-#	var texture_view := RDTextureView.new()
-#	var texture_format := RDTextureFormat.new()
-#	#tamaños de textura y de máscara
-#	texture_format.width = image.get_width()
-#	texture_format.height = image.get_height()
-#	var mask_w := Global.brush_mask.get_width()
-#	var mask_h := Global.brush_mask.get_height()
-#	
-#	texture_format.format = RenderingDevice.DATA_FORMAT_R32G32B32A32_SFLOAT
-#
-#	texture_format.usage_bits = (
-#		RenderingDevice.TEXTURE_USAGE_STORAGE_BIT +
-#		RenderingDevice.TEXTURE_USAGE_CAN_COPY_FROM_BIT +
-#		RenderingDevice.TEXTURE_USAGE_SAMPLING_BIT
-#	)
-#	
-#	var texture := rd.texture_create(texture_format, texture_view, [image.get_data()])
-#	
-#	var image_uniform := RDUniform.new()
-#	image_uniform.uniform_type = RenderingDevice.UNIFORM_TYPE_IMAGE
-#	image_uniform.binding = 0
-#	image_uniform.add_id(texture)
-#	
-#	var uniform_set := rd.uniform_set_create([image_uniform], shader, 0)
-#	var compute_list := rd.compute_list_begin()
-#	
-#	rd.compute_list_bind_compute_pipeline(compute_list, pipeline)
-#	rd.compute_list_bind_uniform_set(compute_list, uniform_set, 0)
-#	rd.compute_list_dispatch(compute_list, 32, 32, 1) # ejecuta el shader, settea el num de work groups
-#	rd.compute_list_end()
-#	
-#	
+func _ready():
+	rd = RenderingServer.get_rendering_device()
+
+	# carga shader
+	var shader_file := load("res://materials/shaders/compute_shader.glsl")
+	# compila shader
+	var shader_spirv: RDShaderSPIRV = shader_file.get_spirv()
+	shader = rd.shader_create_from_spirv(shader_spirv)
+	# shader pipeline
+	pipeline = rd.compute_pipeline_create(shader)
+	
+	var input_data := PackedFloat32Array([1.0,0.2,0.5]).to_byte_array()
+	var storage_buffer := rd.storage_buffer_create(input_data.size(), input_data)
+	
+	#var image = texture.get_image()
+	var image := preload("res://assets/images/normals/flat_normal_map.png")
+	image.convert(Image.FORMAT_RGBAF)
+	
+	var texture_view := RDTextureView.new()
+	
+	var texture_format := RDTextureFormat.new()
+	#tamaños de textura y de máscara
+	texture_format.width = image.get_width()
+	texture_format.height = image.get_height()
+	var mask_w := Global.brush_mask.get_width()
+	var mask_h := Global.brush_mask.get_height()
+
+	texture_format.format = RenderingDevice.DATA_FORMAT_R32G32B32A32_SFLOAT
+
+	texture_format.usage_bits = (
+		RenderingDevice.TEXTURE_USAGE_STORAGE_BIT +
+		RenderingDevice.TEXTURE_USAGE_CAN_COPY_FROM_BIT +
+		RenderingDevice.TEXTURE_USAGE_SAMPLING_BIT
+	) 
+
+	var texture := rd.texture_create(texture_format, texture_view, [image.get_data()])
+
+	var parameter_uniform := RDUniform.new()
+	parameter_uniform.uniform_type = RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER
+	parameter_uniform.binding = 0
+	parameter_uniform.add_id(storage_buffer)
+	
+	var image_uniform := RDUniform.new()
+	image_uniform.uniform_type = RenderingDevice.UNIFORM_TYPE_IMAGE
+	image_uniform.binding = 1
+	image_uniform.add_id(texture)
+
+	var uniform_set := rd.uniform_set_create([parameter_uniform, image_uniform], shader, 0)
+	var compute_list := rd.compute_list_begin()
+
+	rd.compute_list_bind_compute_pipeline(compute_list, pipeline)
+	rd.compute_list_bind_uniform_set(compute_list, uniform_set, 0)
+	rd.compute_list_dispatch(compute_list, 32, 32, 1) # ejecuta el shader, settea el num de work groups
+	rd.compute_list_end()
+	
+	var texture_rd := Texture2DRD.new()
+	texture_rd.texture_rd_rid = texture
+	$"../Compute/OutputSprite2D".texture = texture_rd
 	
 #	#metodo para pintar la máscara de pincel actual en una posición uv de la textura dada con un color para la máscara
 #    func _paint_mask_in_image(texture: ImageTexture, uv: Vector2, color: Color) -> ImageTexture:
