@@ -33,7 +33,7 @@ func _ready():
 	# escalamos la uv a coordenadas sobre la textura real y las usamos como centro de la "circunferencia"
 	var cx := (0.5 * float(image_total.get_width())) # 0.5 es la u
 	var cy := (0.5 * float(image_total.get_height())) # 0.5 es la v
-	var size := maxf(1.0, 200.0)  #para que no pueda ser 0 y ademas tratamos brush size como radio (no se si esta bien pero me venía de refactorizarlo de la ecuación del círculo
+	var size := maxf(1.0, 400.0)  #para que no pueda ser 0 y ademas tratamos brush size como radio (no se si esta bien pero me venía de refactorizarlo de la ecuación del círculo
 	var diameter := size
 	var radius := size * 0.5
 	var color : Vector4 = Vector4(1.0,0.0,0.0,1.0)
@@ -46,7 +46,7 @@ func _ready():
 	var input_data := PackedFloat32Array([image_total.get_width(), image_total.get_height(), mask_w, mask_h, cx, cy, diameter, radius, Global.brush_strength, color]).to_byte_array()
 	var storage_buffer: RID = rd.storage_buffer_create(input_data.size(), input_data)
 	
-	var input_data_1 := PackedFloat32Array([color]).to_byte_array()
+	var input_data_1 := PackedFloat32Array([1.0,0.0,0.0]).to_byte_array()
 	var storage_buffer_1: RID = rd.storage_buffer_create(input_data_1.size(), input_data_1)
 	
 	# imagen para pasar al shader
@@ -117,7 +117,7 @@ func _compute(storage_buffer: RID, storage_buffer_1: RID, texture: RID, texture_
 
 	rd.compute_list_bind_compute_pipeline(compute_list, pipeline)
 	rd.compute_list_bind_uniform_set(compute_list, uniform_set, 0)
-	rd.compute_list_dispatch(compute_list, image_total.get_width(), image_total.get_width(), 1) # ejecuta el shader, settea el num de work groups
+	rd.compute_list_dispatch(compute_list, int(ceil(image_n.get_width() / 8.0)), int(ceil(image_n.get_height() / 8.0)), 1) # ejecuta el shader, settea el num de work groups
 	rd.compute_list_end()
 	
 	var texture_rd := Texture2DRD.new()
