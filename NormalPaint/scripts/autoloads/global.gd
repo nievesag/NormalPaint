@@ -3,6 +3,7 @@ extends Node
 var primary_color : Color
 var secondary_color : Color
 var paint_both : bool = false
+var showing_normals : bool = false
 var brush_mask: Image
 var brush_size: float = 10
 var brush_strength: float = 1.0

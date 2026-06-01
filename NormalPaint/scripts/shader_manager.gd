@@ -4,7 +4,6 @@ extends Node3D
 @export_category("Materiales")
 @export var texture_material: BaseMaterial3D
 @export var normal_material: ShaderMaterial
-var _showing_normal := false
 
 @export_category("Texturas")
 @export var default_normal_map: Image
@@ -27,7 +26,7 @@ func _ready() -> void:
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("toggle_view"):
-		_showing_normal = not _showing_normal
+		Global.showing_normals = not Global.showing_normals
 		_apply_current_material() #aplicamos el material que toque
 
 
@@ -37,7 +36,7 @@ func _apply_current_material() -> void:
 		print_debug("NO HAY SUJETO ASIGNADO EN SHADER MANAGER")
 		return
 
-	var material := normal_material as Material if _showing_normal else texture_material # el que toque
+	var material := normal_material as Material if Global.showing_normals else texture_material # el que toque
 	if material == null:
 		print_debug("NO HAY MATERIAL VALIDO ASIGNADO EN SHADER MANAGER")
 		return
@@ -130,7 +129,7 @@ func paint_at_uv(uv: Vector2) -> void:
 		_set_normal_map(_working_normal_map)
 		return
 		
-	if _showing_normal: # pintamos mapa de normales
+	if Global.showing_normals: # pintamos mapa de normales
 		if _working_normal_map == null: return
 		_working_normal_map = _paint_mask_in_image(_working_normal_map, uv, Global.secondary_color)
 		if _working_normal_map == null: return
@@ -197,7 +196,7 @@ func _paint_mask_in_image(texture: ImageTexture, uv: Vector2, color: Color) -> I
 			var mx := int(round(u * float(mask_w - 1)))
 			var my := int(round(v * float(mask_h - 1)))
 
-			var mask_px := Global.brush_mask.get_pixel(mx, my) # pixel de la mascara
+			var mask_px : Color = Global.brush_mask.get_pixel(mx, my) # pixel de la mascara
 			var mask_value := clampf(mask_px.r, 0.0, 1.0) * Global.brush_strength #r porque se que es grayscale pero ehh yo que se, y 0 y 1 para que no se salga la fuerza por arriba o por debajo
 			if mask_value <= 0.0: #si no hace nada
 				continue
