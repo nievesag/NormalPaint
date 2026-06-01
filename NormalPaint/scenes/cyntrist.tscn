@@ -122,6 +122,7 @@ offset_right = 51.0
 offset_bottom = 49.0
 icon_alignment = 1
 color = Color(0.49803922, 1, 0.49803922, 1)
+edit_alpha = false
 
 [node name="Secondary" type="ColorPickerButton" parent="UI/ColorPickers" unique_id=2105646582]
 layout_mode = 0
@@ -130,6 +131,7 @@ offset_right = 100.0
 offset_bottom = 49.0
 icon_alignment = 1
 color = Color(0.49803922, 0.49803922, 1, 1)
+edit_alpha = false
 
 [node name="Label" type="Label" parent="UI" unique_id=953833827]
 layout_mode = 1
