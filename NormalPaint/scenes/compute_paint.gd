@@ -31,16 +31,16 @@ func _ready():
 	var mask_h := Global.brush_mask.get_height()
 	
 	# escalamos la uv a coordenadas sobre la textura real y las usamos como centro de la "circunferencia"
-	var cx := 0.5 * float(image_n.get_width()) # 0.5 es la u
-	var cy := 0.5 * float(image_n.get_height()) # 0.5 es la v
-	var size := maxf(1.0, Global.brush_size * 2)  #para que no pueda ser 0 y ademas tratamos brush size como radio (no se si esta bien pero me venía de refactorizarlo de la ecuación del círculo
+	var cx := (0.5 * float(image_total.get_width())) # 0.5 es la u
+	var cy := (0.5 * float(image_total.get_height())) # 0.5 es la v
+	var size := maxf(1.0, 200.0)  #para que no pueda ser 0 y ademas tratamos brush size como radio (no se si esta bien pero me venía de refactorizarlo de la ecuación del círculo
 	var diameter := size
 	var radius := size * 0.5
-	var color : Color;
-	if Global.showing_normals:
-		color = Global.secondary_color
-	else:
-		color = Global.primary_color
+	var color : Vector4 = Vector4(1.0,0.0,0.0,1.0)
+#	if Global.showing_normals:
+#		color = Global.secondary_color
+#	else:
+#		color = Global.primary_color
 	
 	# parametros para pasar al shader
 	var input_data := PackedFloat32Array([image_total.get_width(), image_total.get_height(), mask_w, mask_h, cx, cy, diameter, radius, Global.brush_strength, color]).to_byte_array()

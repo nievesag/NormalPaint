@@ -11,7 +11,7 @@ layout(set = 0, binding = 0, std430) readonly buffer parameters {
     float diameter;
     float radius;
     float brush_strength;
-    vec4 color;
+    vec4 brush_color;
 }
 params;
 
@@ -32,25 +32,28 @@ void main() {
 
     // normalizamos la pos local dentro de 0-1
 	// max evita dividir entre 0 si el diametro fuese 1
-    float u = clamp(float(local.x) / float(max(1, params.diameter - 1)), 0.0, 1.0);
-    float v = clamp(float(local.y) / float(max(1, params.diameter - 1)), 0.0, 1.0);
+    float u = clamp(float(local.x) / float(max(1.0, params.diameter - 1)), 0.0, 1.0);
+    float v = clamp(float(local.y) / float(max(1.0, params.diameter - 1)), 0.0, 1.0);
 
     // convertimos esa posición normalizada a coordenadas reales dentro de la máscara del brush
 	// si u = 0.0 -> mx = 0
 	// si u = 1.0 -> mx = mask_w - 1 
-    int mx = int(floor((u * float(params.mask_w - 1)) + 0.5));
-	int my = int(floor((v * float(params.mask_h - 1)) + 0.5));
+    int mx = int(floor((u * float(params.mask_w - 1.0)) + 0.5));
+	int my = int(floor((v * float(params.mask_h - 1.0)) + 0.5));
 
-    float mask_value = clamp(imageLoad(image, local).r, 0.0, 1.0) * params.brush_strength;
+    float red = imageLoad(image, ivec2(mx,my)).r;
+    float mask_value = clamp(red, 0.0, 1.0) * params.brush_strength;
 
     if (mask_value <= 0.0)
     {
         return;
     }
 
+    // -------
     vec4 base = imageLoad(image_1, ivec2(px, py));
-    vec4 output_color = mix(base, params.color, mask_value);
-    imageStore(image_1, ivec2(px, py), output_color);
+    vec3 output_color = mix(base.rgb, params.brush_color.rgb, mask_value);
+    vec4 o = vec4(params.brush_color.r, params.brush_color.g, params.brush_color.b, 1.0);
+    imageStore(image_1, ivec2(px, py), o);
 
     //vec4 color = imageLoad(image, uv);
     //vec4 multiplier = vec4(params.r, params.g, params.b, 1.0);
