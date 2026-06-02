@@ -83,9 +83,9 @@ assets
 ├── scripts
 │   └── autoloads
 └── textures
-│   ├── brushes
-│   ├── cursor
-│   └── normals
+    ├── brushes
+    ├── cursor
+    └── normals
 ```
 
 ### Estructura de las escenas
