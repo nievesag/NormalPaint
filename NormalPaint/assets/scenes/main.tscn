@@ -160,19 +160,6 @@ offset_right = 1152.0
 offset_bottom = 100.0
 color = Color(0.16078432, 0.15686275, 0.22745098, 1)
 
-[node name="Icon" type="TextureRect" parent="UI/Layout" unique_id=1323436831]
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = 1002.0
-offset_top = 1.0
-offset_right = 1102.0
-offset_bottom = 101.0
-grow_horizontal = 0
-texture = ExtResource("6_jscy8")
-expand_mode = 1
-
 [node name="FPS" type="Label" parent="UI/Layout" unique_id=153225562]
 layout_mode = 1
 anchors_preset = 2
@@ -203,6 +190,18 @@ theme_override_font_sizes/font_size = 12
 text = "Textura exportada..."
 horizontal_alignment = 2
 vertical_alignment = 2
+
+[node name="TextureRect" type="TextureRect" parent="UI/Layout" unique_id=1761973717]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -107.0
+offset_right = -7.0
+offset_bottom = 100.0
+grow_horizontal = 0
+texture = ExtResource("6_jscy8")
+expand_mode = 1
 
 [node name="Controls" type="Control" parent="UI" unique_id=201024432]
 anchors_preset = 0
