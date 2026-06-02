@@ -262,7 +262,7 @@ El resto del código se basa en la versión de CPU y lo adapta a la paralelizaci
 Nieves Alonso Gilsanz y Cynthia Tristán Álvarez, autoras de la documentación, código y recursos de este trabajo, concedemos permiso permanente para utilizar este material, con fines educativos o de investigación; ya sea para obtener datos agregados de forma anónima como para utilizarlo total o parcialmente reconociendo expresamente nuestra autoría.
 
 ## Referencias
-A continuación se detallan todas las referencias bibliográficas, o de otro tipo utilizdas para realizar este prototipo. Los recursos de terceros que se han utilizados son de uso público.
+A continuación se detallan todas las referencias bibliográficas, o de otro tipo utilizdas para realizar este prototipo. Los recursos de terceros que se han utilizados son de uso público.[^1][^2][^3][^4][^5][^6][^7][^8][^9][^10][^11][^12]
 
 [^1]: Cody Gindy. [*Making 3D animation look painterly (it's easier than you think)*](https://www.youtube.com/watch?v=s8N00rjil_4). Cody Gindy. Youtube. 2023.
 
