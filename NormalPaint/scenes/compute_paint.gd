@@ -114,6 +114,10 @@ func _compute(storage_buffer: RID, storage_buffer_1: RID, texture: RID, texture_
 	rd.compute_list_dispatch(compute_list, groups_x, groups_y, 1)
 	rd.compute_list_end()
 	
+	rd.free_rid(texture)
+	rd.free_rid(storage_buffer)
+	rd.free_rid(storage_buffer_1)
+	
 	var texture_rd := Texture2DRD.new()
 	texture_rd.texture_rd_rid = texture_1
 	return texture_rd
