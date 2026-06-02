@@ -11,24 +11,13 @@ func _on_mapa_normales_button_up() -> void:
 	_export_texture(true, "normal_map")
 
 func _export_texture(export_normal_map: bool, base_name: String) -> void:
-	var manager := shader_manager
-	if manager == null:
-		manager = get_node_or_null("../../../Managers/ShaderManager")
-	if manager == null:
-		push_error("No se encontro ShaderManager para exportar texturas.")
-		return
-
 	var texture: Texture2D = null
 	if export_normal_map:
-		if manager.has_method("get_working_normal_map"):
-			texture = manager.call("get_working_normal_map") as Texture2D
+		if shader_manager.has_method("get_working_normal_map"):
+			texture = shader_manager.call("get_working_normal_map") as Texture2D
 	else:
-		if manager.has_method("get_working_albedo"):
-			texture = manager.call("get_working_albedo") as Texture2D
-
-	if texture == null:
-		push_error("No hay textura disponible para exportar.")
-		return
+		if shader_manager.has_method("get_working_albedo"):
+			texture = shader_manager.call("get_working_albedo") as Texture2D
 
 	var image := texture.get_image()
 	if image == null:

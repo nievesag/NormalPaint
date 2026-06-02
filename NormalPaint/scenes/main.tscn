@@ -301,13 +301,14 @@ brush_mask = SubResource("Image_y6deb")
 cursor = NodePath("../../../../Cursor")
 brush_cursor = ExtResource("15_vxglm")
 
-[node name="Exportar" type="Control" parent="UI/Controls" unique_id=61814901]
+[node name="Exportar" type="Control" parent="UI/Controls" unique_id=61814901 node_paths=PackedStringArray("shader_manager")]
 anchors_preset = 0
 offset_left = 582.0
 offset_top = 56.0
 offset_right = 1019.0
 offset_bottom = 91.0
 script = ExtResource("19_y6deb")
+shader_manager = NodePath("../../../Managers/ShaderManager")
 
 [node name="MapaNormales" type="Button" parent="UI/Controls/Exportar" unique_id=488886126]
 layout_mode = 0
