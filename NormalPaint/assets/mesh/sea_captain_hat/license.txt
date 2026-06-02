@@ -1,0 +1,11 @@
+Model Information:
+* title:	Sea Captain Hat
+* source:	https://sketchfab.com/3d-models/sea-captain-hat-b8ef6610b4fa4a7cb6df3232c836349c
+* author:	Dizzy Engine (https://sketchfab.com/DizzyEngine)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Sea Captain Hat" (https://sketchfab.com/3d-models/sea-captain-hat-b8ef6610b4fa4a7cb6df3232c836349c) by Dizzy Engine (https://sketchfab.com/DizzyEngine) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
