@@ -247,14 +247,10 @@ y que se puede obviar el doble for que se ejecutaba en la versión de CPU. Pudie
 ```
 ivec2 local = ivec2(gl_GlobalInvocationID.xy);
 ```
+![WORK](https://github.com/nievesag/NormalPaint/blob/main/docs/work.png)
 El resto del código se basa en la versión de CPU y lo adapta a la paralelización con el shader basándose en este criterio.
 
 ## Pruebas y métricas
-
-### Plan de pruebas
-
-Serie corta y rápida posible de pruebas que pueden realizarse para probar las características del prototipo:
-
 ### Métricas tomadas
 
 ### Vídeo
@@ -263,6 +259,31 @@ Serie corta y rápida posible de pruebas que pueden realizarse para probar las c
 ## Conclusiones
 
 ## Licencia
+Nieves Alonso Gilsanz y Cynthia Tristán Álvarez, autoras de la documentación, código y recursos de este trabajo, concedemos permiso permanente para utilizar este material, con fines educativos o de investigación; ya sea para obtener datos agregados de forma anónima como para utilizarlo total o parcialmente reconociendo expresamente nuestra autoría.
 
 ## Referencias
 A continuación se detallan todas las referencias bibliográficas, o de otro tipo utilizdas para realizar este prototipo. Los recursos de terceros que se han utilizados son de uso público.
+
+[^1]: Cody Gindy. [*Making 3D animation look painterly (it's easier than you think)*](https://www.youtube.com/watch?v=s8N00rjil_4). Cody Gindy. Youtube. 2023.
+
+[^2]: Crigz Vs Game Dev. [*How to use Compute Shaders in Godot 4*](https://www.youtube.com/watch?v=5CKvGYqagyI). Crigz Vs Game Dev. Youtube. 2022.
+
+[^3]: Alfred Reinold Baudisch. [*Godot Engine In-game Splat Map Texture Painting (Dirt Removal Effect)*](https://github.com/alfredbaudisch/GodotRuntimeTextureSplatMapPainting/tree/master). 2022.
+
+[^4]: DevPoodle. [*A Guide to Using Compute Shaders in Godot*](https://www.youtube.com/watch?v=ry7bv7BY56c). DevPoodle. Youtube. 2025.
+
+[^5]: Godot Engine 4.6 documentation in English. [*Using compute shaders*](https://docs.godotengine.org/en/stable/tutorials/shaders/compute_shaders.html).
+
+[^6]: Godot Engine 4.6 documentation in English. [*Shading language*](https://docs.godotengine.org/en/4.4/tutorials/shaders/shader_reference/shading_language.html).
+
+[^7]: Godot Engine 4.6 documentation in English. [*Ray-casting*](https://docs.godotengine.org/en/stable/tutorials/physics/ray-casting.html#d-ray-casting-from-screen).
+
+[^8]: Burt, M. Hollós, R. [*godot-vertex-painter*](https://github.com/bikemurt/godot-vertex-painter). 2024.
+
+[^9]: Wikipedia Contributors. [*Barycentric coordinate system*](https://en.wikipedia.org/wiki/Barycentric_coordinate_system). Wikipedia.
+
+[^10]: Wikipedia Contributors. [*Barycentric coordinate system*](https://en.wikipedia.org/wiki/Barycentric_coordinate_system). Wikipedia.
+
+[^11]: Shirley, P. Marschner, S. Fundamentals of Computer Graphics, Fourth Edition. CRC Press. 2016.
+
+[^12]: OpenGL 4.6 Reference Pages. [*OpenGL 4.6 Reference Pages*](https://registry.khronos.org/OpenGL-Refpages/gl4/).
