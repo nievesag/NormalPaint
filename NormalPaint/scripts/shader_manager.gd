@@ -122,32 +122,19 @@ func _paint_mask_in_image(texture: Texture2D, uv: Vector2, color: Color) -> Text
 		push_error("Imposible pintar en textura nula")
 		return null
 
-	var image: Image = texture.get_image()
-	if image == null:
-		push_error("Imagen de textura nula")
-		return null
-	
-	if image.is_compressed():
-		image.decompress()
-	if image.get_format() != Image.FORMAT_RGBA8:
-		image.convert(Image.FORMAT_RGBA8)
-
 	if Global.brush_mask == null:
 		push_error("Mascara de pincel nula")
 		return texture
 		
 	if _compute_paint != null and _compute_paint.has_method("setup_compute"):
-		var computed_variant: Variant = _compute_paint.call("setup_compute", image, uv, color)
+		var computed_variant: Variant = _compute_paint.call("setup_compute", texture, uv, color)
 		if computed_variant is Texture2D:
-			var computed_texture := computed_variant as Texture2D
-			var computed_image := computed_texture.get_image()
-			if computed_image.is_compressed():
-				computed_image.decompress()
-			if computed_image.get_format() != Image.FORMAT_RGBA8:
-				computed_image.convert(Image.FORMAT_RGBA8)
-			return ImageTexture.create_from_image(computed_image)
+			return computed_variant as Texture2D
 		return null
 	return null
+	
+	
+	# VERSIÓN CPU!!!!!!!!!!!
 #	#tamaños de textura y de máscara
 #	var w := image.get_width()
 #	var h := image.get_height()
