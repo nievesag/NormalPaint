@@ -1,4 +1,5 @@
 # NormalPaint
+![LOGO](https://github.com/nievesag/NormalPaint/blob/main/docs/LOGO.png)
 
 ## Índice
 1. [Vídeo](#vídeo)
@@ -169,6 +170,15 @@ var uv_from_face: Vector2 = uv0 * bc.x + uv1 * bc.y + uv2 * bc.z
 ```
 Cuando se ha obtenido la coordenada de textura en la que se deberá pintar según el input procesado se puede pasar a la gestión del trazo en sí. Todo ello se lleva a cabo en el [paint_manager.gd](https://github.com/nievesag/NormalPaint/blob/main/NormalPaint/scripts/paint_manager.gd).
 
+Es importante que para que el prototipo funcione correctamente los modelos pintables deben definirse en la escena con esta jerarquía:
+```text
+StaticBody3D
+├── MeshInstance3D
+└── CollisionShape3D
+```
+
+Debe ser un [StaticBody3D](https://docs.godotengine.org/es/4.x/classes/class_staticbody3d.html) porque debe ser un cuerpo físico inamovible, en la [MeshInstance3D](https://docs.godotengine.org/es/4.x/classes/class_meshinstance3d.html) se definirá su mesh con sus correspondientes materiales y la [CollisionShape3D](https://docs.godotengine.org/en/stable/classes/class_collisionshape3d.html) de tipo [ConcavePolygonShape3D](https://docs.godotengine.org/en/stable/classes/class_concavepolygonshape3d.html) para poder ser detectado por el rayo, además este tipo garantiza que la malla esté triangulada.
+
 ### 2. Gestión de un trazo
 Los pinceles se procesan como máscaras de color, con la silueta de la forma del pincel en blanco y el fondo en negro. Entonces, para gestionar un trazo en una textura es importante conocer qué máscara de pincel se está usando, su tamaño, el color con el que se debe pintar y sobre qué capa se está pintando, que decidirá la textura que ha de ser modificada (textura albedo o mapa de normales).
 
@@ -304,7 +314,7 @@ ivec2 local = ivec2(gl_GlobalInvocationID.xy);
 ```
 ![WORK](https://github.com/nievesag/NormalPaint/blob/main/docs/work.png)
 
-El resto del código se basa en la versión de CPU y lo adapta a la paralelización con el shader basándose en este criterio.
+El resto del código se basa en la versión de CPU y lo adapta a la paralelización con el shader glsl basándose en este criterio.
 
 ## Métricas
 
