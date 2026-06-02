@@ -1,6 +1,8 @@
 # NormalPaint
 
 ## Índice
+1. [Vídeo](#vídeo)
+1. [Controles](#controles)
 1. [Autoras](#autoras)
 2. [Resumen](#resumen)
 3. [Instalación y uso](#instalación-y-uso)
@@ -8,14 +10,36 @@
 5. [Planteamiento del proyecto](#planteamiento-del-proyecto)
 6. [Estructura](#estructura)
 7. [Implementación](#implementación)
-8. [Pruebas y métricas](#pruebas-y-métricas)
+8. [Métricas](#métricas)
 9. [Conclusiones](#conclusiones)
 9. [Ampliaciones](#ampliaciones)
 10. [Licencia](#licencia)
 11. [Referencias](#referencias)
 
-### Vídeo
+## Vídeo
 - [Vídeo demostración]()
+
+## Controles
+Ratón:
+
+- **LMB**: pintar sobre el modelo siguiendo la UV obtenida por raycast.
+- **RMB + mover ratón**: rotar la cámara.
+- **MMB + mover ratón**: orbitar alrededor del objetivo.
+- **MMB + Shift**: paneo de la cámara.
+- **Rueda del ratón**: zoom hacia o desde el objetivo.
+
+Teclado:
+- **WASD**: desplazamiento libre de la cámara.
+- **O**: centrar el objetivo en el origen.
+- **R**: restaurar la transformada inicial de la cámara.
+- **T**: alternar entre la vista de textura y la vista de mapa de normales.
+
+Interfaz:
+- **Botones de pinceles**: cambiar la máscara del pincel activo.
+- **Deslizador**: ajustar el tamaño del pincel.
+- **Selectores de color**: cambiar el color de pintado de la capa albedo y de la capa de normales respectivamente.
+- **Casilla `Double channel`**: pintar simultáneamente en ambas capas.
+- **Botones de exportación**: guardar la textura albedo o el mapa de normales como PNG.
 
 ## Autoras
 - Nieves Alonso Gilsanz [@nievesag](https://github.com/nievesag)
@@ -28,7 +52,7 @@ El proyecto consiste en una aplicación de pintura en 3D en tiempo real donde se
 Todo el contenido del proyecto está disponible en este repositorio, con **Godot Engine v4.6.2.** o posterior siendo capaces de bajar todos los recursos necesarios y editar el proyecto.
 
 ## Introducción
-Este proyecto corresponde a la práctica final de la asignatura de Iluminación y Materiales del Grado en Desarrollo de Videojuegos de la UCM del curso 2025-2026. Este prototipo sirve para poner en práctica los conocimientos de la asignatura a través de su exploración de los mapas de normales, el procesado de texturas y materiales en motores actuales y la programación de shaders de cómputo en GPU.
+Este proyecto corresponde a la práctica final de la asignatura de Iluminación y Materiales del Grado en Desarrollo de Videojuegos de la UCM del curso 2025-2026. Este prototipo sirve para poner en práctica los conocimientos de la asignatura a través de su exploración de los mapas de normales, el procesado de texturas y materiales en motores actuales y la programación de sombreadores de cómputo en GPU.
 
 ## Estructura
 ### Estructura del proyecto
@@ -257,10 +281,10 @@ El shader se computa una vez por cada hilo (*invocation*), agrupados en conjunto
 ivec2 local = ivec2(gl_GlobalInvocationID.xy);
 ```
 ![WORK](https://github.com/nievesag/NormalPaint/blob/main/docs/work.png)
+
 El resto del código se basa en la versión de CPU y lo adapta a la paralelización con el shader basándose en este criterio.
 
-## Pruebas y métricas
-### Métricas tomadas
+## Métricas
 
 En un PC de estas características:
 - **CPU:** Intel Core i5-12600KF a 3.70 GHz
@@ -270,6 +294,7 @@ En un PC de estas características:
 - **Versión de Godot:** 4.6
   
 A través del dibujado por CPU la media de FPS rondaba los 45 FPS.
+
 A través de la versión por GPU con el shader de cómputo se manteían los 60 FPS estables.
 
 ## Conclusiones
@@ -277,13 +302,29 @@ Este proyecto nos ha permitido integrar en un único lugar varias piezas que, po
 
 El resultado es un prototipo de herramienta funcional que sirve de demostración técnica tanto del pintado sobre albedo y mapas de normales resoluble de forma interactiva y con una estructura razonablemente modular, como del efecto pintoresco jugando con la iluminación de un modelo a través de la combinación del mapa de normales y la textura de su material.
 
+## Ampliaciones
+A falta de tiempo, las siguientes tareas planeadas que se han quedado como posibles ampliaciones han sido:
+
+* Importación de modelos y texturas del usuario.
+* Trazado de líneas.
+* Sistema de deshacer / rehacer pinceladas.
+* Pinceladas a través proyección de la silueta del cursor sobre el modelo.
+* Atajos de teclado.
+* Soporte real de opacidad y fuerza del pincel.
+
 ## Licencia
 Nieves Alonso Gilsanz y Cynthia Tristán Álvarez, autoras de la documentación, código y recursos de este trabajo, concedemos permiso permanente para utilizar este material, con fines educativos o de investigación; ya sea para obtener datos agregados de forma anónima como para utilizarlo total o parcialmente reconociendo expresamente nuestra autoría.
 
 ## Referencias
-A continuación se detallan todas las referencias bibliográficas, o de otro tipo utilizdas para realizar este prototipo. Los recursos de terceros que se han utilizados son de uso público.[^1][^2][^3][^4][^5][^6][^7][^8][^9][^10][^11][^12][^13]
+A continuación se detallan todas las referencias bibliográficas, o de otro tipo, utilizadas para realizar este prototipo. Los recursos de terceros que se han usado son de acceso público.[^1][^2][^3][^4][^5][^6][^7][^8][^9][^10][^11][^12][^13]
 
-El vídeo de Cody Gindy[^1] es el que ha servido de inspiración principal e idea para el proyecto de lograr un efecto de tipo pintura en un modelo a través del pintado a mano del mapa de normales principalmente, y también de la textura de albedo.
+El vídeo de Cody Gindy[^1] es el que ha servido de inspiración principal e idea para el proyecto: lograr un efecto de tipo pintura en un modelo a través del pintado a mano del mapa de normales y de la textura de albedo.
+
+Para la parte de aceleración por GPU y el uso de shaders de cómputo se tomaron como base varias fuentes complementarias. Los recursos de Crigz Vs Game Dev[^2] y DevPoodle[^4] ayudaron a entender la estructura general de un compute shader en Godot y su puesta en marcha mediante *RenderingDevice*, mientras que la documentación oficial de Godot sobre compute shaders[^5] y lenguaje de shading[^6] sirvió como referencia normativa para ajustar bindings, buffers, texturas y sintaxis GLSL. La documentación de OpenGL[^12] también fue útil como fuente de información sobre funciones y convenciones y como apoyo para comprender el modelo de ejecución y las operaciones de acceso a imágenes que se emplean en el shader.
+
+La obtención de UVs a partir de un raycast sobre la malla requirió combinar la documentación oficial de Godot sobre ray-casting[^7] con el conocimiento práctico de coordenadas baricéntricas y su interpolación[^9][^10][^11]. La referencia de godot-vertex-painter[^8] fue especialmente útil como punto de comparación para el enfoque de pintura sobre mallas arbitrarias y para validar el planteamiento de cálculo de UVs en tiempo real.
+
+El planteamiento de pintar sobre texturas y mantener varias capas de trabajo también se apoyó en el proyecto de Alfred Reinold Baudisch[^3], que sirvió como referencia práctica para el tratamiento de texturas modificables en tiempo de ejecución. El modelo que se ha usado para la carga y demostración ha sido proporcionado por *Dizzy Engine*[^13].
 
 [^1]: Cody Gindy. [*Making 3D animation look painterly (it's easier than you think)*](https://www.youtube.com/watch?v=s8N00rjil_4). Cody Gindy. Youtube. 2023.
 
@@ -309,4 +350,4 @@ El vídeo de Cody Gindy[^1] es el que ha servido de inspiración principal e ide
 
 [^12]: OpenGL 4.6 Reference Pages. [*OpenGL 4.6 Reference Pages*](https://registry.khronos.org/OpenGL-Refpages/gl4/).
 
-[^13]: Qazan, K. [*The thinker 3D Model*](https://sketchfab.com/3d-models/the-thinker-27339621613d4d55a61d9e58bd6ef908). 2023.
+[^13]: Dizzy Engine. [*Sea Captain Hat*](https://sketchfab.com/3d-models/sea-captain-hat-b8ef6610b4fa4a7cb6df3232c836349c). 2023.
