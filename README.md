@@ -10,15 +10,19 @@
 7. [Implementación](#implementación)
 8. [Pruebas y métricas](#pruebas-y-métricas)
 9. [Conclusiones](#conclusiones)
+9. [Ampliaciones](#ampliaciones)
 10. [Licencia](#licencia)
 11. [Referencias](#referencias)
+
+### Vídeo
+- [Vídeo demostración]()
 
 ## Autoras
 - Nieves Alonso Gilsanz [@nievesag](https://github.com/nievesag)
 - Cynthia Tristán Álvarez [@cyntrist](https://github.com/cyntrist)
 
 ## Resumen
-El proyecto consiste en una aplicación de pintura en 3D en tiempo real donde se podrá importar modelos y pintar sobre ellos. Además, se podrá elegir el pincel con el que pintar y su tamaño, el color con el que pintar y sobre qué «capa» pintar: textura albedo, mapa de normales o ambas a la vez.
+El proyecto consiste en una aplicación de pintura en 3D en tiempo real donde se puede pintar sobre un modelo. Se podrá elegir el pincel con el que pintar y su tamaño, el color con el que pintar y sobre qué «capa» pintar: textura albedo, mapa de normales o ambas a la vez.
 
 ## Instalación y uso
 Todo el contenido del proyecto está disponible en este repositorio, con **Godot Engine v4.6.2.** o posterior siendo capaces de bajar todos los recursos necesarios y editar el proyecto.
@@ -45,9 +49,7 @@ Los recursos que conforman el proyecto están organizados de esta forma:
 assets
 ├── fonts
 ├── images
-│   ├── brushes
-│   ├── cursor
-│   └── normals
+├── themes
 ├── materials
 │   └── shaders
 ├── mesh
@@ -55,12 +57,13 @@ assets
 ├── scripts
 │   └── autoloads
 └── textures
-    ├── brushes
-    └── normals
+│   ├── brushes
+│   ├── cursor
+│   └── normals
 ```
 
 ### Estructura de las escenas
-Hay una única escena en el prototipo donde se podrán realizar todas las acciones:
+Hay una única escena en el prototipo donde se podrán realizar todas las acciones: [main.tscn](https://github.com/nievesag/NormalPaint/blob/main/NormalPaint/assets/scenes/main.tscn)
 
 ## Planteamiento del proyecto
 Las características principales del prototipo son:
@@ -73,7 +76,7 @@ Las características principales del prototipo son:
 
 * Se podrá pintar sobre ambas capas en tiempo real, permitiendo elegir si pintas solo en una de las dos o en ambas, la textura del mapa de normales se interpretará como tal haciendo que los trazos reaccionen a la luz.
 
-* Se podrán importar y exportar modelos nuevos, con sus texturas, para probar el prototipo.
+* Se podrán exportar las texturas pintadas.
 
 ## Implementación
 La implementación del prototipo ha abarcado, principalmente, cuatro retos: el procesado del input de un usuario, actualizar una textura según ese input procesado, gestionar las diferentes capas, y optimizar el pintado.
@@ -128,18 +131,28 @@ Cuando se ha obtenido la coordenada de textura en la que se deberá pintar segú
 ### 2. Gestión de un trazo
 Los pinceles se procesan como máscaras de color, con la silueta de la forma del pincel en blanco y el fondo en negro. Entonces, para gestionar un trazo en una textura es importante conocer qué máscara de pincel se está usando, su tamaño, el color con el que se debe pintar y sobre qué capa se está pintando, que decidirá la textura que ha de ser modificada (textura albedo o mapa de normales).
 
-Se detalla a continuación el método implementado para gestionar un trazo por cpu.
+Se detalla a continuación el método implementado para gestionar un trazo por CPU:
 
-TODO
+Primero se toma la textura activa y se extrae su imagen de trabajo. A partir de la UV obtenida por raycast se escala la coordenada al espacio real de la textura y se calcula el centro del trazo. Con el tamaño del pincel se define un cuadrado de trabajo alrededor de ese centro y, para cada píxel de ese cuadrado, se localiza el píxel equivalente dentro de la máscara del pincel.
+
+La máscara se interpreta como una imagen en escala de grises: el valor de su color en cada píxel se multiplica por la fuerza global del pincel. Si el valor resultante es 0, ese píxel no se modifica. En caso contrario, se mezcla el color actual de la textura con el color del pincel mediante interpolación lineal, de forma que la máscara determina la forma final del trazo.
+
+Una vez procesada, la textura se actualiza y vuelve a aplicarse al material correspondiente. En la versión por CPU esto implica recorrer dos bucles anidados sobre el área del pincel, lo que funciona correctamente pero penaliza el rendimiento cuando el tamaño del pincel crece o cuando se pintan muchas veces por segundo.
 
 ### 3. Materiales y capas
 
-TODO
+El prototipo trabaja con dos capas principales: la textura albedo y el mapa de normales. Ambas se mantienen como texturas de trabajo separadas para poder pintarlas de manera independiente o simultánea según la opción seleccionada en la interfaz.
+
+La vista normal y la vista texturizada se resuelven con dos materiales distintos. Por un lado, `texture_material` es un [StandardMaterial3D](https://docs.godotengine.org/en/stable/classes/class_standardmaterial3d.html) que muestra la textura albedo y mantiene activado el normal map del modelo, apreciándose el efecto esperado real. Por otro, `normal_material` es un [ShaderMaterial](https://docs.godotengine.org/en/stable/classes/class_shadermaterial.html) usado como vista para inspeccionar el mapa de normales, aplicando el normal map pintado sobre la superficie como su propio albedo.
+
+Cuando el usuario pulsa **T**, el `ShaderManager` alterna entre ambas vistas. Además, si se activa el modo de doble canal, un mismo trazo se aplica tanto a la textura albedo como al mapa de normales, usando los colores seleccionados en los [ColorPickerButton](https://docs.godotengine.org/en/stable/classes/class_colorpickerbutton.html) de la interfaz. Si no está activado, el pintado se dirige solo a la capa visible en ese momento.
+
+Esta separación permite exportar cada resultado por separado: la textura de color y el mapa de normales se recuperan desde el `ShaderManager` y se guardan como archivos PNG independientes.
 
 ### 4. Optimización
-Para acelerar el cálculo de la gestión de un trazo, el actualizar los píxeles de la textura deseada según una máscara en una posición de UVs dada, se hace uso de un shader de cómputo el cual permite el procesado de datos por gpu de manera que se pueden paralelizar y acelerar los cálculos. 
+Para acelerar el cálculo de la gestión de un trazo, el actualizar los píxeles de la textura deseada según una máscara en una posición de UVs dada, se hace uso de un shader de cómputo el cual permite el procesado de datos por GPU de manera que se pueden paralelizar y acelerar los cálculos. 
 
-Para poder hacer uso de estos primero hay que preparar una puesta en marcha en gdscript, para ello lo primero es acceder al [RenderingDevice](https://docs.godotengine.org/en/stable/classes/class_renderingdevice.html) global que proporciona una abastracción de APIs gráficas de bajo nivel como Vulkan o DirectX, a través de él se podrá invocar al shader en glsl que realizará los cálculos, y a este se le pasarán datos en formato buffer para procesarlos, RenderingDevice también facilita su creación e inicialización y la asignación de los *work groups*, agrupaciones de hilos capaces de cooperar entre sí y ejecutarse en paralelo.
+Para poder hacer uso de estos primero hay que preparar una puesta en marcha en GDScript, para ello lo primero es acceder al [RenderingDevice](https://docs.godotengine.org/en/stable/classes/class_renderingdevice.html) global que proporciona una abastracción de APIs gráficas de bajo nivel como Vulkan o DirectX, a través de él se podrá invocar al shader en glsl que realizará los cálculos, y a este se le pasarán datos en formato buffer para procesarlos, RenderingDevice también facilita su creación e inicialización y la asignación de los *work groups*, agrupaciones de hilos capaces de cooperar entre sí y ejecutarse en paralelo.
 
 De esta manera se inicializa un shader de cómputo para poder usarlo más adelante.
 ```
@@ -239,11 +252,7 @@ rd.compute_list_dispatch(compute_list, groups_x, groups_y, 1)
 rd.compute_list_end()
 ```
 
-El shader se computa una vez por cada hilo, 
-
-TODO 
-
-y que se puede obviar el doble for que se ejecutaba en la versión de CPU. Pudiendo acceder a la x y la a la y locales de la máscara tal que así:
+El shader se computa una vez por cada hilo (*invocation*), agrupados en conjuntos de 32 hilos cada uno (*workgroups*), cubriendo por porciones en función del tamaño en píxeles de la máscara de modo que cada invocación se encarga de procesar un único píxel dentro del área del pincel. Así se puede obviar el doble `for` que se ejecutaba en la versión de CPU. Pudiendo acceder a la x y la y locales de la máscara tal que así:
 ```
 ivec2 local = ivec2(gl_GlobalInvocationID.xy);
 ```
@@ -253,16 +262,28 @@ El resto del código se basa en la versión de CPU y lo adapta a la paralelizaci
 ## Pruebas y métricas
 ### Métricas tomadas
 
-### Vídeo
-- [Vídeo demostración]()
+En un PC de estas características:
+- **CPU:** Intel Core i5-12600KF a 3.70 GHz
+- **GPU:** NVIDIA GeForce RTX 5070 Ti con 16 GB
+- **RAM:** 32 GB (16x2) de 4800 MT/s
+- **SO:** Windows 11
+- **Versión de Godot:** 4.6
+  
+A través del dibujado por CPU la media de FPS rondaba los 45 FPS.
+A través de la versión por GPU con el shader de cómputo se manteían los 60 FPS estables.
 
 ## Conclusiones
+Este proyecto nos ha permitido integrar en un único lugar varias piezas que, por separado, suelen tratarse de forma aislada: obtención de UVs sobre mallas arbitrarias, pintura en tiempo real, gestión de materiales y uso de compute shaders para acelerar el procesado. Todos estos problemas durante el desarrollo y más, como la gestión del formato de imágenes, han supuesto puntos de aprendizaje importantes. 
+
+El resultado es un prototipo de herramienta funcional que sirve de demostración técnica tanto del pintado sobre albedo y mapas de normales resoluble de forma interactiva y con una estructura razonablemente modular, como del efecto pintoresco jugando con la iluminación de un modelo a través de la combinación del mapa de normales y la textura de su material.
 
 ## Licencia
 Nieves Alonso Gilsanz y Cynthia Tristán Álvarez, autoras de la documentación, código y recursos de este trabajo, concedemos permiso permanente para utilizar este material, con fines educativos o de investigación; ya sea para obtener datos agregados de forma anónima como para utilizarlo total o parcialmente reconociendo expresamente nuestra autoría.
 
 ## Referencias
 A continuación se detallan todas las referencias bibliográficas, o de otro tipo utilizdas para realizar este prototipo. Los recursos de terceros que se han utilizados son de uso público.[^1][^2][^3][^4][^5][^6][^7][^8][^9][^10][^11][^12][^13]
+
+El vídeo de Cody Gindy[^1] es el que ha servido de inspiración principal e idea para el proyecto de lograr un efecto de tipo pintura en un modelo a través del pintado a mano del mapa de normales principalmente, y también de la textura de albedo.
 
 [^1]: Cody Gindy. [*Making 3D animation look painterly (it's easier than you think)*](https://www.youtube.com/watch?v=s8N00rjil_4). Cody Gindy. Youtube. 2023.
 
