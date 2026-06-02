@@ -40,6 +40,8 @@ func _setup_compute(texture: Image, uv: Vector2, color: Color):
 	# imagenes para pasar al shader
 	# ---- mascara
 	Global.brush_mask.convert(Image.FORMAT_RGBAF)
+	if Global.brush_mask.has_mipmaps():
+		Global.brush_mask.clear_mipmaps()
 	
 	var mask_view := RDTextureView.new()
 	var mask_format := RDTextureFormat.new()
@@ -60,6 +62,8 @@ func _setup_compute(texture: Image, uv: Vector2, color: Color):
 	# ---- texture
 	# imagen para pasar al shader
 	texture.convert(Image.FORMAT_RGBAF)
+	if texture.has_mipmaps():
+		texture.clear_mipmaps()
 	
 	var texture_view := RDTextureView.new()
 	var texture_format := RDTextureFormat.new()
