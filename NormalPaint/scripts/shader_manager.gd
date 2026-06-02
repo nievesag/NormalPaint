@@ -150,7 +150,7 @@ func _paint_mask_in_image(texture: ImageTexture, uv: Vector2, color: Color) -> I
 		push_error("Imposible pintar en textura nula")
 		return null
 
-	var image := texture.get_image()
+	var image: Image = texture.get_image()
 	if image == null:
 		push_error("Imagen de textura nula")
 		return null
@@ -161,53 +161,53 @@ func _paint_mask_in_image(texture: ImageTexture, uv: Vector2, color: Color) -> I
 	if Global.brush_mask == null:
 		push_error("Mascara de pincel nula")
 		return texture
-
-	if _compute_paint != null and _compute_paint.has_method("_setup_compute"):
-		_compute_paint.call("_setup_compute", image, uv, color)
+		
+	if _compute_paint != null and _compute_paint.has_method("setup_compute"):
+		_compute_paint.call("setup_compute", image, uv, color)
 		return
 
-	#tamaños de textura y de máscara
-	var w := image.get_width()
-	var h := image.get_height()
-	var mask_w := Global.brush_mask.get_width()
-	var mask_h := Global.brush_mask.get_height()
-
-	#escalamos la uv a coordenadas sobre la textura real y las usamos como centro de la "circunferencia"
-	var cx := uv.x * float(w)
-	var cy := uv.y * float(h)
-	var size := maxf(1.0, Global.brush_size)  #para que no pueda ser 0 y ademas tratamos brush size como radio (no se si esta bien pero me venía de refactorizarlo de la ecuación del círculo
-	var diameter := size
-	var radius := size * 0.5
-
-	# lo que acabará siendo el shader de cómputo
-	for y in range(cy - radius, cy + radius):
-		for x in range(cx - radius, cx + radius):
-			var px := posmod(x, w) # funcion de autowrap increible
-			var py := posmod(y, h)
-
-			#pos local del píxel actual dentro del cuadrado del pincel
-			# cx - half / cy - half es la esquina superior izquierda del area a pintar en principio
-			var local_x := x - (cx - radius)
-			var local_y := y - (cy - radius)
-			
-			#normalizamos la pos local dentro de 0-1
-			# max evita dividir entre 0 si el diametro fuese 1
-			var u := clampf(float(local_x) / float(max(1, diameter - 1)), 0.0, 1.0)
-			var v := clampf(float(local_y) / float(max(1, diameter - 1)), 0.0, 1.0)
-			
-			#convertimos esa posición normalizada a coordenadas reales dentro de la máscara del brush
-			#si u = 0.0 → mx = 0
-			#si u = 1.0 → mx = mask_w - 1
-			var mx := int(round(u * float(mask_w - 1)))
-			var my := int(round(v * float(mask_h - 1)))
-
-			var mask_px : Color = Global.brush_mask.get_pixel(mx, my) # pixel de la mascara
-			var mask_value := clampf(mask_px.r, 0.0, 1.0) * Global.brush_strength #r porque se que es grayscale pero ehh yo que se, y 0 y 1 para que no se salga la fuerza por arriba o por debajo
-			if mask_value <= 0.0: #si no hace nada
-				continue
-
-			var base := image.get_pixel(px, py) #pixel original
-			image.set_pixel(px, py, base.lerp(color, mask_value)) #blendeo con el pixel calculado de la mascara en funcion de su fuerza
-
-	texture.update(image) #reemplazamos textura
-	return texture
+#	#tamaños de textura y de máscara
+#	var w := image.get_width()
+#	var h := image.get_height()
+#	var mask_w := Global.brush_mask.get_width()
+#	var mask_h := Global.brush_mask.get_height()
+#
+#	#escalamos la uv a coordenadas sobre la textura real y las usamos como centro de la "circunferencia"
+#	var cx := uv.x * float(w)
+#	var cy := uv.y * float(h)
+#	var size := maxf(1.0, Global.brush_size)  #para que no pueda ser 0 y ademas tratamos brush size como radio (no se si esta bien pero me venía de refactorizarlo de la ecuación del círculo
+#	var diameter := size
+#	var radius := size * 0.5
+#
+#	# lo que acabará siendo el shader de cómputo
+#	for y in range(cy - radius, cy + radius):
+#		for x in range(cx - radius, cx + radius):
+#			var px := posmod(x, w) # funcion de autowrap increible
+#			var py := posmod(y, h)
+#
+#			#pos local del píxel actual dentro del cuadrado del pincel
+#			# cx - half / cy - half es la esquina superior izquierda del area a pintar en principio
+#			var local_x := x - (cx - radius)
+#			var local_y := y - (cy - radius)
+#			
+#			#normalizamos la pos local dentro de 0-1
+#			# max evita dividir entre 0 si el diametro fuese 1
+#			var u := clampf(float(local_x) / float(max(1, diameter - 1)), 0.0, 1.0)
+#			var v := clampf(float(local_y) / float(max(1, diameter - 1)), 0.0, 1.0)
+#			
+#			#convertimos esa posición normalizada a coordenadas reales dentro de la máscara del brush
+#			#si u = 0.0 → mx = 0
+#			#si u = 1.0 → mx = mask_w - 1
+#			var mx := int(round(u * float(mask_w - 1)))
+#			var my := int(round(v * float(mask_h - 1)))
+#
+#			var mask_px : Color = Global.brush_mask.get_pixel(mx, my) # pixel de la mascara
+#			var mask_value := clampf(mask_px.r, 0.0, 1.0) * Global.brush_strength #r porque se que es grayscale pero ehh yo que se, y 0 y 1 para que no se salga la fuerza por arriba o por debajo
+#			if mask_value <= 0.0: #si no hace nada
+#				continue
+#
+#			var base := image.get_pixel(px, py) #pixel original
+#			image.set_pixel(px, py, base.lerp(color, mask_value)) #blendeo con el pixel calculado de la mascara en funcion de su fuerza
+#
+#	texture.update(image) #reemplazamos textura
+#	return texture

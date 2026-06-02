@@ -15,7 +15,7 @@ func _ready():
 	# shader pipeline
 	pipeline = rd.compute_pipeline_create(shader)
 	
-func _setup_compute(texture: Image, uv: Vector2, color: Color):
+func setup_compute(texture: Image, uv: Vector2, color: Color) -> Texture2D:
 	# parametros para el shader
 	var mask_w := Global.brush_mask.get_width()
 	var mask_h := Global.brush_mask.get_height()
@@ -81,9 +81,9 @@ func _setup_compute(texture: Image, uv: Vector2, color: Color):
 
 	var texture_rid: RID = rd.texture_create(texture_format, texture_view, [texture.get_data()])
 	
-	_compute(storage_buffer, storage_buffer_1, mask_rid, texture_rid, texture.get_width(), texture.get_height())
+	return _compute(storage_buffer, storage_buffer_1, mask_rid, texture_rid, texture.get_width(), texture.get_height())
 
-func _compute(storage_buffer: RID, storage_buffer_1: RID, texture: RID, texture_1: RID, texture_w: float, texture_h: float):
+func _compute(storage_buffer: RID, storage_buffer_1: RID, texture: RID, texture_1: RID, texture_w: float, texture_h: float) -> Texture2D:
 	var parameter_uniform := RDUniform.new()
 	parameter_uniform.uniform_type = RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER
 	parameter_uniform.binding = 0
@@ -114,4 +114,5 @@ func _compute(storage_buffer: RID, storage_buffer_1: RID, texture: RID, texture_
 	
 	var texture_rd := Texture2DRD.new()
 	texture_rd.texture_rd_rid = texture_1
-	$"../Compute/OutputSprite2D".texture = texture_rd
+	return texture_rd
+	#$"../Compute/OutputSprite2D".texture = texture_rd
