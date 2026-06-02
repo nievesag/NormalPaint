@@ -54,15 +54,33 @@ func _get_normal_map() -> Texture2D:
 
 	var normal_tex: Texture2D = texture_material.get_texture(BaseMaterial3D.TEXTURE_NORMAL)
 	if normal_tex != null:
-		return normal_tex
+		return _normalize_working_texture(normal_tex, true)
 
-	print_debug("La mesh no tiene normal map, creandolo")
+	print_debug("La mesh no tiene normal map, creándolo...")
 	if default_normal_map == null:
 		default_normal_map = Image.create(texture_size.x, texture_size.y, false, Image.FORMAT_RGBAF)
 		default_normal_map.fill(Color(0.5, 0.5, 1.0, 1.0))
 	else:
 		default_normal_map.convert(Image.FORMAT_RGBAF)
 	return ImageTexture.create_from_image(default_normal_map)
+
+func _normalize_working_texture(texture: Texture2D, is_albedo: bool) -> Texture2D:
+	if texture == null:
+		return null
+	if texture is Texture2DRD:
+		return texture
+
+	var image: Image = texture.get_image()
+	if image == null:
+		return texture
+	if image.is_compressed():
+		image.decompress()
+	if image.has_mipmaps():
+		image.clear_mipmaps()
+	if is_albedo and (image.get_format() == Image.FORMAT_RGB8 or image.get_format() == Image.FORMAT_RGBA8):
+		image.srgb_to_linear()
+	image.convert(Image.FORMAT_RGBAF)
+	return ImageTexture.create_from_image(image)
 
 func _set_normal_map(tex: Texture2D) -> void:
 	if tex == null:
@@ -81,7 +99,7 @@ func _set_normal_map(tex: Texture2D) -> void:
 func _get_albedo() -> Texture2D:
 	if texture_material == null:
 		return null
-	return texture_material.get_texture(BaseMaterial3D.TEXTURE_ALBEDO)
+	return _normalize_working_texture(texture_material.get_texture(BaseMaterial3D.TEXTURE_ALBEDO), true)
 
 func _set_albedo(tex: Texture2D) -> void:
 	#programacion defensiva
@@ -95,30 +113,30 @@ func _set_albedo(tex: Texture2D) -> void:
 func paint_at_uv(uv: Vector2) -> void:
 	if Global.paint_both:
 		if _working_albedo_tex == null: return
-		_working_albedo_tex = _paint_mask_in_image(_working_albedo_tex, uv, Global.primary_color, true)
+		_working_albedo_tex = _paint_mask_in_image(_working_albedo_tex, uv, Global.primary_color)
 		if _working_albedo_tex == null: return
 		_set_albedo(_working_albedo_tex)
 		if _working_normal_map == null: return
-		_working_normal_map = _paint_mask_in_image(_working_normal_map, uv, Global.secondary_color, false)
+		_working_normal_map = _paint_mask_in_image(_working_normal_map, uv, Global.secondary_color)
 		if _working_normal_map == null: return
 		_set_normal_map(_working_normal_map)
 		return
 		
 	if Global.showing_normals: # pintamos mapa de normales
 		if _working_normal_map == null: return
-		_working_normal_map = _paint_mask_in_image(_working_normal_map, uv, Global.secondary_color, false)
+		_working_normal_map = _paint_mask_in_image(_working_normal_map, uv, Global.secondary_color)
 		if _working_normal_map == null: return
 		_set_normal_map(_working_normal_map)
 		return
 	
 	#pintamos textura
 	if _working_albedo_tex == null: return
-	_working_albedo_tex = _paint_mask_in_image(_working_albedo_tex, uv, Global.primary_color, true)
+	_working_albedo_tex = _paint_mask_in_image(_working_albedo_tex, uv, Global.primary_color)
 	if _working_albedo_tex == null: return
 	_set_albedo(_working_albedo_tex)
 		
 #metodo para pintar la mascara de pincel actual en una posicion uv de la textura dada con un color para la mascara
-func _paint_mask_in_image(texture: Texture2D, uv: Vector2, color: Color, is_albedo: bool) -> Texture2D:
+func _paint_mask_in_image(texture: Texture2D, uv: Vector2, color: Color) -> Texture2D:
 	#programacion defensiva
 	if texture == null:
 		push_error("Imposible pintar en textura nula")
@@ -129,7 +147,7 @@ func _paint_mask_in_image(texture: Texture2D, uv: Vector2, color: Color, is_albe
 		return texture
 		
 	if _compute_paint != null and _compute_paint.has_method("setup_compute"):
-		var computed_variant: Variant = _compute_paint.call("setup_compute", texture, uv, color, true)
+		var computed_variant: Variant = _compute_paint.call("setup_compute", texture, uv, color)
 		if computed_variant is Texture2D:
 			return computed_variant as Texture2D
 		return null

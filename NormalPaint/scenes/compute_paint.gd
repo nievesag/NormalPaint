@@ -65,7 +65,7 @@ func _ensure_mask_texture() -> bool:
 	_cached_mask_id = current_mask_id
 	return _mask_rid.is_valid()
 	
-func setup_compute(texture: Texture2D, uv: Vector2, color: Color, is_albedo: bool = false) -> Texture2D:
+func setup_compute(texture: Texture2D, uv: Vector2, color: Color) -> Texture2D:
 	if rd == null:
 		return texture
 	if texture == null:
@@ -86,10 +86,9 @@ func setup_compute(texture: Texture2D, uv: Vector2, color: Color, is_albedo: boo
 	var size := maxf(1.0, Global.brush_size)  # para que no pueda ser 0
 	var diameter := size
 	var radius := size * 0.5
-	var needs_srgb_to_linear_image: bool = is_albedo and not (texture is Texture2DRD)
+	var needs_srgb_to_linear_image: bool = not (texture is Texture2DRD)
 	var paint_color: Color = color
-	if is_albedo:
-		paint_color = color.srgb_to_linear()
+	paint_color = color.srgb_to_linear()
 
 	# ---------- BUFFERS
 	# parametros para pasar al shader
