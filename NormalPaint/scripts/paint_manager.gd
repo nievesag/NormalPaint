@@ -148,7 +148,7 @@ func _raycast_uv(mouse_position: Vector2) -> void:
 	var hit := get_world_3d().direct_space_state.intersect_ray(query)
 	
 	if hit.is_empty():  # si no se da a nada
-		print_debug("no se colisionó con nada")
+#		print_debug("no se colisionó con nada")
 		return
 						# si se da a algo
 	var pos: Vector3 = hit["position"]
@@ -186,7 +186,7 @@ func _raycast_uv(mouse_position: Vector2) -> void:
 			var uv1: Vector2 = mdt.get_vertex_uv(i1)
 			var uv2: Vector2 = mdt.get_vertex_uv(i2)
 			var uv_from_face: Vector2 = uv0 * bc.x + uv1 * bc.y + uv2 * bc.z
-			print("UV: ", uv_from_face)
+#			print("UV: ", uv_from_face)
 			
 #			draw_viewport.paint(uv_from_face, Global.foreground_color)
 			if _shader_manager != null and _shader_manager.has_method("paint_at_uv"):
