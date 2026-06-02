@@ -168,7 +168,7 @@ Una vez se ha obtenido el baricentro el «tercer paso» resulta trivial:
 // se multiplican los valores de los factores de interpolación asociados a cada vértice y se suma todo
 var uv_from_face: Vector2 = uv0 * bc.x + uv1 * bc.y + uv2 * bc.z
 ```
-Cuando se ha obtenido la coordenada de textura en la que se deberá pintar según el input procesado se puede pasar a la gestión del trazo en sí. Todo ello se lleva a cabo en el [PaintManager](https://github.com/nievesag/NormalPaint/blob/main/NormalPaint/scripts/paint_manager.gd)
+Cuando se ha obtenido la coordenada de textura en la que se deberá pintar según el input procesado se puede pasar a la gestión del trazo en sí. Todo ello se lleva a cabo en el [paint_manager.gd](https://github.com/nievesag/NormalPaint/blob/main/NormalPaint/scripts/paint_manager.gd).
 
 ### 2. Gestión de un trazo
 Los pinceles se procesan como máscaras de color, con la silueta de la forma del pincel en blanco y el fondo en negro. Entonces, para gestionar un trazo en una textura es importante conocer qué máscara de pincel se está usando, su tamaño, el color con el que se debe pintar y sobre qué capa se está pintando, que decidirá la textura que ha de ser modificada (textura albedo o mapa de normales).
@@ -187,9 +187,9 @@ El prototipo trabaja con dos capas principales: la textura albedo y el mapa de n
 
 La vista normal y la vista texturizada se resuelven con dos materiales distintos. Por un lado, `texture_material` es un [StandardMaterial3D](https://docs.godotengine.org/en/stable/classes/class_standardmaterial3d.html) que muestra la textura albedo y mantiene activado el normal map del modelo, apreciándose el efecto esperado real. Por otro, `normal_material` es un [ShaderMaterial](https://docs.godotengine.org/en/stable/classes/class_shadermaterial.html) usado como vista para inspeccionar el mapa de normales, aplicando el normal map pintado sobre la superficie como su propio albedo.
 
-Cuando el usuario pulsa **T**, el [ShaderManager](https://github.com/nievesag/NormalPaint/blob/main/NormalPaint/scripts/shader_manager.gd) alterna entre ambas vistas. Además, si se activa el modo de doble canal, un mismo trazo se aplica tanto a la textura albedo como al mapa de normales, usando los colores seleccionados en los [ColorPickerButton](https://docs.godotengine.org/en/stable/classes/class_colorpickerbutton.html) de la interfaz. Si no está activado, el pintado se dirige solo a la capa visible en ese momento.
+Cuando el usuario pulsa **T**, el [shader_manager](https://github.com/nievesag/NormalPaint/blob/main/NormalPaint/scripts/shader_manager.gd) alterna entre ambas vistas. Además, si se activa el modo de doble canal, un mismo trazo se aplica tanto a la textura albedo como al mapa de normales, usando los colores seleccionados en los [ColorPickerButton](https://docs.godotengine.org/en/stable/classes/class_colorpickerbutton.html) de la interfaz. Si no está activado, el pintado se dirige solo a la capa visible en ese momento.
 
-Esta separación permite exportar cada resultado por separado: la textura de color y el mapa de normales se recuperan desde el `ShaderManager` y se guardan como archivos PNG independientes.
+Esta separación permite exportar cada resultado por separado: la textura de color y el mapa de normales se recuperan desde el [shader_manager](https://github.com/nievesag/NormalPaint/blob/main/NormalPaint/scripts/shader_manager.gd) y se guardan como archivos PNG independientes.
 
 ### 4. Optimización
 Para acelerar el cálculo de la gestión de un trazo, el actualizar los píxeles de la textura deseada según una máscara en una posición de UVs dada, se hace uso de un shader de cómputo el cual permite el procesado de datos por GPU de manera que se pueden paralelizar y acelerar los cálculos. 
@@ -296,6 +296,8 @@ rd.compute_list_dispatch(compute_list, groups_x, groups_y, 1)
 ```
 rd.compute_list_end()
 ```
+
+Extracto de [compute_shader.glsl](https://github.com/nievesag/NormalPaint/blob/main/NormalPaint/assets/materials/shaders/compute_shader.glsl).
 
 El shader se computa una vez por cada hilo (*invocation*), agrupados en conjuntos de 32 hilos cada uno (*workgroups*), cubriendo por porciones en función del tamaño en píxeles de la máscara de modo que cada invocación se encarga de procesar un único píxel dentro del área del pincel. Así se puede obviar el doble `for` que se ejecutaba en la versión de CPU. Pudiendo acceder a la x y la y locales de la máscara tal que así:
 ```
