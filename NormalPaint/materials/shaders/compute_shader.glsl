@@ -21,9 +21,9 @@ layout(set = 0, binding = 3, std430) buffer parameters_1 {
 }
 params_1;
 
-layout(set = 0, binding = 1, rgba32f) uniform image2D image; // mascara
+layout(set = 0, binding = 1, rgba32f) uniform image2D mask; // mascara
 
-layout(set = 0, binding = 2, rgba32f) uniform image2D image_1; // textura
+layout(set = 0, binding = 2, rgba32f) uniform image2D texture; // textura
 
 layout(local_size_x = 32, local_size_y = 32, local_size_z = 1) in;
 
@@ -47,7 +47,7 @@ void main() {
     int mx = int(floor((u * float(params.mask_w - 1.0)) + 0.5));
 	int my = int(floor((v * float(params.mask_h - 1.0)) + 0.5));
 
-    float red = imageLoad(image, ivec2(mx,my)).r;
+    float red = imageLoad(mask, ivec2(mx,my)).r;
     float mask_value = clamp(red, 0.0, 1.0) * params.brush_strength;
 
     if (mask_value <= 0.0)
@@ -55,15 +55,8 @@ void main() {
         return;
     }
 
-    // -------
-    vec4 base = imageLoad(image_1, ivec2(px, py));
-    //vec3 output_color = mix(base.rgb, params_1.brush_color.rgb, mask_value);
+    vec4 base = imageLoad(texture, ivec2(px, py));
     vec4 o = vec4(params_1.brush_color_r, params_1.brush_color_g, params_1.brush_color_b, 1.0);
-    imageStore(image_1, ivec2(px, py), o);
-
-    //vec4 color = imageLoad(image, uv);
-    //vec4 multiplier = vec4(params.r, params.g, params.b, 1.0);
-
-    //vec4 output_color = color * multiplier;
-    //imageStore(image, uv, output_color);
+    vec4 final = mix(base, o, mask_value);
+    imageStore(texture, ivec2(px, py), final);
 }

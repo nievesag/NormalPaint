@@ -19,7 +19,7 @@
 [ext_resource type="Image" uid="uid://bpuukr4k5cb70" path="res://assets/images/brushes/mask04.png" id="15_3habk"]
 [ext_resource type="Texture2D" uid="uid://1lskmd1sltgl" path="res://assets/images/cursor/02cursor.png" id="15_kslj6"]
 [ext_resource type="Texture2D" uid="uid://v7j120xn5msd" path="res://assets/images/cursor/04cursor.png" id="20_5w7x6"]
-[ext_resource type="Script" uid="uid://bnx53nkahexw8" path="res://scripts/fps_label.gd" id="20_63tbu"]
+[ext_resource type="Script" path="res://scripts/fps_label.gd" id="20_63tbu"]
 [ext_resource type="Script" uid="uid://dekg6xjeoogqt" path="res://scenes/compute_paint.gd" id="21_snk0p"]
 [ext_resource type="Script" uid="uid://cbwdv3pb5ub0b" path="res://scripts/draw_viewport.gd" id="22_2hmkj"]
 [ext_resource type="Material" uid="uid://d4aklslum76v1" path="res://materials/paintable_material.tres" id="22_63tbu"]
