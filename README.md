@@ -19,6 +19,8 @@
 ## Vídeo
 https://github.com/user-attachments/assets/54578e5d-8cde-414e-b9f4-fe1b8194e8c1
 
+-[Vídeo demostrativo](https://youtu.be/z4m9Ax6AlzI?si=piZM3a6mlnGsQY7o)
+
 ## Controles
 Ratón:
 
@@ -88,6 +90,22 @@ assets
 
 ### Estructura de las escenas
 Hay una única escena en el prototipo donde se podrán realizar todas las acciones: [main.tscn](https://github.com/nievesag/NormalPaint/blob/main/NormalPaint/assets/scenes/main.tscn)
+
+#### Flujo principal de pintado
+```mermaid
+flowchart LR
+    UI[UI: pinceles, colores, tamaño y exportación] --> PM[PaintManager]
+    CAM[Camera3D] --> PM
+    MESH[MeshInstance3D] --> PM
+    PM -->|UV por raycast| SM[ShaderManager]
+    SM -->|elige vista| MAT[Material activo]
+    SM --> CMP[Compute]
+    CMP -->|modifica| ALB[Textura albedo]
+    CMP -->|modifica| NRM[Mapa de normales]
+    ALB --> MAT
+    NRM --> MAT
+    MAT --> REN[Render final]
+```
 
 ## Planteamiento del proyecto
 Las características principales del prototipo son:
@@ -316,7 +334,7 @@ A falta de tiempo, las siguientes tareas planeadas que se han quedado como posib
 Nieves Alonso Gilsanz y Cynthia Tristán Álvarez, autoras de la documentación, código y recursos de este trabajo, concedemos permiso permanente para utilizar este material, con fines educativos o de investigación; ya sea para obtener datos agregados de forma anónima como para utilizarlo total o parcialmente reconociendo expresamente nuestra autoría.
 
 ## Referencias
-A continuación se detallan todas las referencias bibliográficas, o de otro tipo, utilizadas para realizar este prototipo. Los recursos de terceros que se han usado son de acceso público.[^1][^2][^3][^4][^5][^6][^7][^8][^9][^10][^11][^12][^13]
+A continuación se detallan todas las referencias bibliográficas, o de otro tipo, utilizadas para realizar este prototipo. Los recursos de terceros que se han usado son de acceso público.[^13]
 
 El vídeo de Cody Gindy[^1] es el que ha servido de inspiración principal e idea para el proyecto: lograr un efecto de tipo pintura en un modelo a través del pintado a mano del mapa de normales y de la textura de albedo.
 
