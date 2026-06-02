@@ -27,7 +27,7 @@ func _ready():
 	empty_color.resize(3 * 4)
 	_color_param_buffer = rd.storage_buffer_create(empty_color.size(), empty_color)
 	
-func setup_compute(texture: Texture2D, uv: Vector2, color: Color) -> Texture2D:
+func setup_compute(texture: Texture2D, uv: Vector2, color: Color, is_albedo: bool = false) -> Texture2D:
 	if texture == null:
 		push_error("setup_compute recibio una textura nula")
 		return null
@@ -46,6 +46,7 @@ func setup_compute(texture: Texture2D, uv: Vector2, color: Color) -> Texture2D:
 	var size := maxf(1.0, Global.brush_size)  # para que no pueda ser 0
 	var diameter := size
 	var radius := size * 0.5
+	var needs_srgb_to_linear: bool = is_albedo and not (texture is Texture2DRD)
 	
 	# ---------- BUFFERS
 	# parametros para pasar al shader
@@ -53,21 +54,22 @@ func setup_compute(texture: Texture2D, uv: Vector2, color: Color) -> Texture2D:
 	var input_data: PackedByteArray = PackedFloat32Array([image.get_width(), image.get_height(), mask_w, mask_h, cx, cy, diameter, radius, Global.brush_strength]).to_byte_array()
 	rd.buffer_update(_params_buffer, 0, input_data.size(), input_data)
 	# 1
-	var input_data_1: PackedByteArray = PackedFloat32Array([color.r,color.g,color.b]).to_byte_array()
+	var input_data_1: PackedByteArray = PackedFloat32Array([color.r, color.g, color.b]).to_byte_array()
 	rd.buffer_update(_color_param_buffer, 0, input_data_1.size(), input_data_1)
 	
 	# ---------- TEXTURES
 	# imagenes para pasar al shader
 	# ---- mascara
-	Global.brush_mask.convert(Image.FORMAT_RGBAF)
-	if Global.brush_mask.has_mipmaps():
-		Global.brush_mask.clear_mipmaps()
+	var mask_image: Image = Global.brush_mask.duplicate()
+	mask_image.convert(Image.FORMAT_RGBAF)
+	if mask_image.has_mipmaps():
+		mask_image.clear_mipmaps()
 	
 	var mask_view := RDTextureView.new()
 	var mask_format := RDTextureFormat.new()
 	# tamaños de textura y de máscara
-	mask_format.width = Global.brush_mask.get_width()
-	mask_format.height = Global.brush_mask.get_height()
+	mask_format.width = mask_image.get_width()
+	mask_format.height = mask_image.get_height()
 
 	mask_format.format = RenderingDevice.DATA_FORMAT_R32G32B32A32_SFLOAT
 
@@ -77,15 +79,17 @@ func setup_compute(texture: Texture2D, uv: Vector2, color: Color) -> Texture2D:
 		RenderingDevice.TEXTURE_USAGE_SAMPLING_BIT
 	) 
 
-	_mask_rid = rd.texture_create(mask_format, mask_view, [Global.brush_mask.get_data()])
+	_mask_rid = rd.texture_create(mask_format, mask_view, [mask_image.get_data()])
 	
 	# ---- image
 	# imagen para pasar al shader
 	if image.is_compressed():
 		image.decompress()
-	image.convert(Image.FORMAT_RGBAF)
 	if image.has_mipmaps():
 		image.clear_mipmaps()
+	if needs_srgb_to_linear and (image.get_format() == Image.FORMAT_RGB8 or image.get_format() == Image.FORMAT_RGBA8):
+		image.srgb_to_linear()
+	image.convert(Image.FORMAT_RGBAF)
 	
 	var texture_view := RDTextureView.new()
 	var texture_format := RDTextureFormat.new()
