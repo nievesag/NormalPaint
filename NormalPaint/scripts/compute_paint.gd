@@ -13,7 +13,7 @@ func _ready():
 	print("Acelerador usado: " + rd.get_device_name())
 
 	# carga shader
-	var shader_file: RDShaderFile = load("res://materials/shaders/compute_shader.glsl")
+	var shader_file: RDShaderFile = load("res://assets/materials/shaders/compute_shader.glsl")
 	# compila shader
 	var shader_spirv: RDShaderSPIRV = shader_file.get_spirv()
 	shader = rd.shader_create_from_spirv(shader_spirv)
