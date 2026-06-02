@@ -3,6 +3,13 @@ extends Node
 const EXPORT_DIR := "user://exports"
 
 @export var shader_manager: Node
+@export var label: Label
+@export_range(0.25, 30.0, 0.25) var tween_duration : float = 5.0
+var _label_tween: Tween
+
+func _ready() -> void:
+	if label != null:
+		label.modulate = Color.TRANSPARENT
 
 func _on_albedo_button_up() -> void:
 	_export_texture(false, "albedo")
@@ -31,6 +38,22 @@ func _export_texture(export_normal_map: bool, base_name: String) -> void:
 	var path := "%s/%s_%s.png" % [EXPORT_DIR, base_name, timestamp]
 	var error := image.save_png(path)
 	if error != OK:
-		push_error("Error al exportar textura a %s" % path)
+		label.text = ("Error al exportar textura a %s" % path)
+		_flash_label()
 		return
-	print("Textura exportada en: ", ProjectSettings.globalize_path(path))
+	label.text = "Textura exportada en: %s" % ProjectSettings.globalize_path(path)
+	_flash_label()
+
+func _flash_label() -> void:
+	if label == null:
+		return
+
+	if _label_tween != null and _label_tween.is_running():
+		_label_tween.kill()
+
+	label.modulate = Color.TRANSPARENT
+	_label_tween = create_tween()
+	_label_tween.tween_property(label, "modulate", Color(0.99215686, 0.96862745, 0.81960785), 0.2)
+	_label_tween.tween_interval(tween_duration)
+	_label_tween.tween_property(label, "modulate", Color.TRANSPARENT, 0.2)
+	
