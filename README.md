@@ -20,8 +20,26 @@
 - [Vídeo demostración]()
 
 ## Controles
+Ratón:
 
-TODO.
+- **LMB**: pintar sobre el modelo siguiendo la UV obtenida por raycast.
+- **RMB + mover ratón**: rotar la cámara.
+- **MMB + mover ratón**: orbitar alrededor del objetivo.
+- **MMB + Shift**: paneo de la cámara.
+- **Rueda del ratón**: zoom hacia o desde el objetivo.
+
+Teclado:
+- **WASD**: desplazamiento libre de la cámara.
+- **O**: centrar el objetivo en el origen.
+- **R**: restaurar la transformada inicial de la cámara.
+- **T**: alternar entre la vista de textura y la vista de mapa de normales.
+
+Interfaz:
+- **Botones de pinceles**: cambiar la máscara del pincel activo.
+- **Deslizador**: ajustar el tamaño del pincel.
+- **Selectores de color**: cambiar el color de pintado de la capa albedo y de la capa de normales respectivamente.
+- **Casilla `Double channel`**: pintar simultáneamente en ambas capas.
+- **Botones de exportación**: guardar la textura albedo o el mapa de normales como PNG.
 
 ## Autoras
 - Nieves Alonso Gilsanz [@nievesag](https://github.com/nievesag)
