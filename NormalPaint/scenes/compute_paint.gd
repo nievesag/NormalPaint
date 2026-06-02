@@ -121,4 +121,3 @@ func _compute(storage_buffer: RID, storage_buffer_1: RID, texture: RID, texture_
 	var texture_rd := Texture2DRD.new()
 	texture_rd.texture_rd_rid = texture_1
 	return texture_rd
-	#$"../Compute/OutputSprite2D".texture = texture_rd
