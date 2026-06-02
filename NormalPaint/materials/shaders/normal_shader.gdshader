@@ -1,7 +1,7 @@
 shader_type spatial;
 render_mode unshaded;
 
-uniform sampler2D albedo_texture : source_color; 
+uniform sampler2D albedo_texture;
 uniform sampler2D normal_tex : hint_normal;
 uniform bool debug_view = true;
 

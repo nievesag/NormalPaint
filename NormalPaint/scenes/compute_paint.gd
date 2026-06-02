@@ -46,16 +46,17 @@ func setup_compute(texture: Texture2D, uv: Vector2, color: Color, is_albedo: boo
 	var size := maxf(1.0, Global.brush_size)  # para que no pueda ser 0
 	var diameter := size
 	var radius := size * 0.5
-	var needs_srgb_to_linear: bool = is_albedo and not (texture is Texture2DRD)
-	
+	var needs_srgb_to_linear_image: bool = is_albedo and not (texture is Texture2DRD)
+	var paint_color: Color = color
+	if is_albedo:
+		paint_color = color.srgb_to_linear()
+
 	# ---------- BUFFERS
 	# parametros para pasar al shader
 	# 0
 	var input_data: PackedByteArray = PackedFloat32Array([image.get_width(), image.get_height(), mask_w, mask_h, cx, cy, diameter, radius, Global.brush_strength]).to_byte_array()
 	rd.buffer_update(_params_buffer, 0, input_data.size(), input_data)
 	# 1
-	var input_data_1: PackedByteArray = PackedFloat32Array([color.r, color.g, color.b]).to_byte_array()
-	rd.buffer_update(_color_param_buffer, 0, input_data_1.size(), input_data_1)
 	
 	# ---------- TEXTURES
 	# imagenes para pasar al shader
@@ -87,9 +88,12 @@ func setup_compute(texture: Texture2D, uv: Vector2, color: Color, is_albedo: boo
 		image.decompress()
 	if image.has_mipmaps():
 		image.clear_mipmaps()
-	if needs_srgb_to_linear and (image.get_format() == Image.FORMAT_RGB8 or image.get_format() == Image.FORMAT_RGBA8):
+	if needs_srgb_to_linear_image and (image.get_format() == Image.FORMAT_RGB8 or image.get_format() == Image.FORMAT_RGBA8):
 		image.srgb_to_linear()
 	image.convert(Image.FORMAT_RGBAF)
+
+	var input_data_1: PackedByteArray = PackedFloat32Array([paint_color.r, paint_color.g, paint_color.b]).to_byte_array()
+	rd.buffer_update(_color_param_buffer, 0, input_data_1.size(), input_data_1)
 	
 	var texture_view := RDTextureView.new()
 	var texture_format := RDTextureFormat.new()
