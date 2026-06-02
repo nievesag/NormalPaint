@@ -61,31 +61,30 @@ Este proyecto corresponde a la práctica final de la asignatura de Iluminación 
 Los recursos que conforman el proyecto están organizados de esta forma:
 
 * **Fonts**. Fuentes utilizadas en el proyecto.
-* **Images**. Imágenes utilizadas en interfaces, máscaras de pincel y texturas.
 * **Materials**. Material de normales y material de textura albedo del modelo cargado actualmente.
   * **Shaders**. Shader de cómputo y otros shaders usados durante el desarrollo.
-* **Mesh**. Modelo cargado actualmente.
-* **Prefabs**. Prefabricados preparados para instanciarse durante la simulación.
+* **Mesh**. Modelos preparados para usarse en la escena.
 * **Scenes**. La escena principal.
-* **Scripts**. Todas las clases con el código organizado en una jerarquía de carpetas.
 * **Textures**. Imágenes importadas como texturas utilizadas en interfaces, máscaras de pincel y texturas.
+* **Themes**. Temas de la UI.
+* **Scripts**. Todas las clases con el código del proyecto.
+ * **Autoloads**. Scripts singletons.
 
 #### Jerarquía de recursos
 ```text
 assets
 ├── fonts
-├── images
-├── themes
 ├── materials
 │   └── shaders
 ├── mesh
 ├── scenes
-├── scripts
-│   └── autoloads
 └── textures
-    ├── brushes
-    ├── cursor
-    └── normals
+│   ├── brushes
+│   ├── cursor
+│   └── normals
+├── themes
+scripts
+└── autoloads
 ```
 
 ### Estructura de las escenas
