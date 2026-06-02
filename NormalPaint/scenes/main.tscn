@@ -12,11 +12,13 @@
 [ext_resource type="Script" uid="uid://bplfs3ftb5fgu" path="res://scripts/brush_selector.gd" id="9_6oc8a"]
 [ext_resource type="Texture2D" uid="uid://derpfua8od6o7" path="res://assets/textures/brushes/brush02.png" id="9_nfndr"]
 [ext_resource type="Texture2D" uid="uid://d3dpphfgxqc3u" path="res://assets/textures/brushes/brush_01.png" id="9_y6deb"]
+[ext_resource type="Theme" uid="uid://3g32xxrxgbnn" path="res://assets/themes/theme.tres" id="10_og1vs"]
 [ext_resource type="Texture2D" uid="uid://vato1yi368n0" path="res://assets/textures/brushes/brush03.png" id="10_ouh5r"]
 [ext_resource type="Texture2D" uid="uid://dxmnpd3fjc6gn" path="res://assets/textures/brushes/brush_02.png" id="11_og1vs"]
 [ext_resource type="Texture2D" uid="uid://e6l8rwnqvxm8" path="res://assets/textures/brushes/brush04.png" id="11_ouh5r"]
 [ext_resource type="Texture2D" uid="uid://cyghgb3wcwaob" path="res://assets/textures/brushes/brush_03.png" id="13_2wyq8"]
 [ext_resource type="Texture2D" uid="uid://drqpt8t2biv0p" path="res://assets/textures/brushes/brush_04.png" id="15_vxglm"]
+[ext_resource type="Script" uid="uid://dohkyuwern2w0" path="res://scripts/export_texture.gd" id="19_y6deb"]
 [ext_resource type="Script" uid="uid://bnx53nkahexw8" path="res://scripts/fps_label.gd" id="20_63tbu"]
 [ext_resource type="Script" uid="uid://dekg6xjeoogqt" path="res://scripts/compute_paint.gd" id="21_snk0p"]
 [ext_resource type="Script" uid="uid://cbwdv3pb5ub0b" path="res://scripts/draw_viewport.gd" id="22_2hmkj"]
@@ -102,7 +104,6 @@ shape = SubResource("ConcavePolygonShape3D_rib1n")
 [node name="Luces" type="Node3D" parent="." unique_id=503148740]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Luces" unique_id=1724261099]
-process_mode = 4
 transform = Transform3D(0.23514207, 0, -0.971961, 0, 1, 0, 0.971961, 0, 0.23514207, -2.9567723, 0, 0)
 
 [node name="SpotLight3D" type="SpotLight3D" parent="Luces" unique_id=356171889]
@@ -179,6 +180,7 @@ offset_top = 574.0
 offset_right = 55.0
 offset_bottom = 608.0
 grow_vertical = 0
+theme = ExtResource("10_og1vs")
 theme_override_font_sizes/font_size = 24
 text = "FPS:"
 script = ExtResource("20_63tbu")
@@ -218,6 +220,7 @@ layout_mode = 0
 offset_top = 40.0
 offset_right = 230.0
 offset_bottom = 94.0
+theme = ExtResource("10_og1vs")
 text = "Double channel"
 
 [node name="BrushSize" type="Control" parent="UI/Controls" unique_id=180123003]
@@ -230,11 +233,12 @@ layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = 539.00085
+offset_left = 546.0
 offset_top = 18.0
 offset_right = 703.0
 offset_bottom = 51.0
 grow_horizontal = 0
+theme = ExtResource("10_og1vs")
 text = "Brush size: "
 
 [node name="HSlider" type="HSlider" parent="UI/Controls/BrushSize" unique_id=698530868 node_paths=PackedStringArray("cursor", "label")]
@@ -243,6 +247,7 @@ offset_left = 738.0
 offset_top = 23.0
 offset_right = 1036.0
 offset_bottom = 39.0
+theme = ExtResource("10_og1vs")
 min_value = 10.0
 max_value = 200.0
 value = 50.0
@@ -299,15 +304,17 @@ brush_cursor = ExtResource("15_vxglm")
 [node name="Exportar" type="Control" parent="UI/Controls" unique_id=61814901]
 anchors_preset = 0
 offset_left = 582.0
-offset_top = 51.0
+offset_top = 56.0
 offset_right = 1019.0
 offset_bottom = 91.0
+script = ExtResource("19_y6deb")
 
 [node name="MapaNormales" type="Button" parent="UI/Controls/Exportar" unique_id=488886126]
 layout_mode = 0
 offset_left = 33.0
 offset_right = 191.0
 offset_bottom = 31.0
+theme = ExtResource("10_og1vs")
 text = "Export normal map"
 
 [node name="Albedo" type="Button" parent="UI/Controls/Exportar" unique_id=352185928]
@@ -315,6 +322,7 @@ layout_mode = 0
 offset_left = 244.0
 offset_right = 421.0
 offset_bottom = 31.0
+theme = ExtResource("10_og1vs")
 text = "Export albedo texture"
 
 [node name="Compute" type="Node" parent="." unique_id=1091607393]
@@ -341,3 +349,5 @@ texture = ExtResource("23_2hmkj")
 [connection signal="pressed" from="UI/Controls/Brushes/HBoxContainer/Button2" to="UI/Controls/Brushes/HBoxContainer/Button2" method="select_brush"]
 [connection signal="pressed" from="UI/Controls/Brushes/HBoxContainer/Button3" to="UI/Controls/Brushes/HBoxContainer/Button3" method="select_brush"]
 [connection signal="pressed" from="UI/Controls/Brushes/HBoxContainer/Button4" to="UI/Controls/Brushes/HBoxContainer/Button4" method="select_brush"]
+[connection signal="button_up" from="UI/Controls/Exportar/MapaNormales" to="UI/Controls/Exportar" method="_on_mapa_normales_button_up"]
+[connection signal="button_up" from="UI/Controls/Exportar/Albedo" to="UI/Controls/Exportar" method="_on_albedo_button_up"]

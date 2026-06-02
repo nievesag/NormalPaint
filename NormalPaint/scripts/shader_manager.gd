@@ -109,6 +109,12 @@ func _set_albedo(tex: Texture2D) -> void:
 	if texture_material != null:
 		texture_material.set_texture(BaseMaterial3D.TEXTURE_ALBEDO, tex)
 
+func get_working_albedo() -> Texture2D:
+	return _working_albedo_tex
+
+func get_working_normal_map() -> Texture2D:
+	return _working_normal_map
+
 
 func paint_at_uv(uv: Vector2) -> void:
 	if Global.paint_both:
