@@ -314,7 +314,7 @@ ivec2 local = ivec2(gl_GlobalInvocationID.xy);
 ```
 ![WORK](https://github.com/nievesag/NormalPaint/blob/main/docs/work.png)
 
-El resto del código se basa en la versión de CPU y lo adapta a la paralelización con el shader basándose en este criterio.
+El resto del código se basa en la versión de CPU y lo adapta a la paralelización con el shader glsl basándose en este criterio.
 
 ## Métricas
 
