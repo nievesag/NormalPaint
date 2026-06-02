@@ -5,16 +5,18 @@
 [ext_resource type="Script" uid="uid://dxqfd2g57esxl" path="res://scripts/shader_manager.gd" id="2_k55y0"]
 [ext_resource type="Script" uid="uid://dx1fl7e5fcsya" path="res://scripts/paint_manager.gd" id="3_13p4k"]
 [ext_resource type="Material" uid="uid://fq5grap05sps" path="res://materials/texture_material.tres" id="3_j4ag4"]
+[ext_resource type="Texture2D" uid="uid://7a6t50wv0030" path="res://assets/textures/ICON.png" id="6_jscy8"]
 [ext_resource type="Script" uid="uid://cpkp8thw4oeoo" path="res://scripts/cursor_manager.gd" id="7_w3vxh"]
 [ext_resource type="Texture2D" uid="uid://uo5ifxequu4m" path="res://assets/textures/brushes/brush01.png" id="8_63kvh"]
-[ext_resource type="Texture2D" uid="uid://bj0try8kegtl8" path="res://assets/textures/cursor/01cursor.png" id="8_mp4i6"]
 [ext_resource type="Script" uid="uid://d0uhqxjrcx6f5" path="res://scripts/brush_resizer.gd" id="8_vxgas"]
 [ext_resource type="Script" uid="uid://bplfs3ftb5fgu" path="res://scripts/brush_selector.gd" id="9_6oc8a"]
 [ext_resource type="Texture2D" uid="uid://derpfua8od6o7" path="res://assets/textures/brushes/brush02.png" id="9_nfndr"]
+[ext_resource type="Texture2D" uid="uid://d3dpphfgxqc3u" path="res://assets/textures/brushes/brush_01.png" id="9_y6deb"]
 [ext_resource type="Texture2D" uid="uid://vato1yi368n0" path="res://assets/textures/brushes/brush03.png" id="10_ouh5r"]
+[ext_resource type="Texture2D" uid="uid://dxmnpd3fjc6gn" path="res://assets/textures/brushes/brush_02.png" id="11_og1vs"]
 [ext_resource type="Texture2D" uid="uid://e6l8rwnqvxm8" path="res://assets/textures/brushes/brush04.png" id="11_ouh5r"]
-[ext_resource type="Texture2D" uid="uid://1lskmd1sltgl" path="res://assets/textures/cursor/02cursor.png" id="15_kslj6"]
-[ext_resource type="Texture2D" uid="uid://v7j120xn5msd" path="res://assets/textures/cursor/04cursor.png" id="20_5w7x6"]
+[ext_resource type="Texture2D" uid="uid://cyghgb3wcwaob" path="res://assets/textures/brushes/brush_03.png" id="13_2wyq8"]
+[ext_resource type="Texture2D" uid="uid://drqpt8t2biv0p" path="res://assets/textures/brushes/brush_04.png" id="15_vxglm"]
 [ext_resource type="Script" uid="uid://bnx53nkahexw8" path="res://scripts/fps_label.gd" id="20_63tbu"]
 [ext_resource type="Script" uid="uid://dekg6xjeoogqt" path="res://scripts/compute_paint.gd" id="21_snk0p"]
 [ext_resource type="Script" uid="uid://cbwdv3pb5ub0b" path="res://scripts/draw_viewport.gd" id="22_2hmkj"]
@@ -73,8 +75,8 @@ script = ExtResource("3_13p4k")
 camera = NodePath("../../Camera3D")
 _meshInstance = NodePath("../../Geometría/Meshes/StaticBody3D/MeshInstance3D")
 _shader_manager = NodePath("../ShaderManager")
-_primary_colorpicker = NodePath("../../UI/ColorPickers/Primary")
-_secondary_colorpicker = NodePath("../../UI/ColorPickers/Secondary")
+_primary_colorpicker = NodePath("../../UI/Controls/ColorPickers/Primary")
+_secondary_colorpicker = NodePath("../../UI/Controls/ColorPickers/Secondary")
 default_brush_mask = SubResource("Image_yc10j")
 
 [node name="ShaderManager" type="Node3D" parent="Managers" unique_id=925348982 node_paths=PackedStringArray("subject", "_compute_paint")]
@@ -140,134 +142,180 @@ grow_vertical = 2
 pivot_offset_ratio = Vector2(0.5, 0.5)
 size_flags_horizontal = 4
 size_flags_vertical = 4
-texture = ExtResource("8_mp4i6")
+texture = ExtResource("9_y6deb")
 script = ExtResource("7_w3vxh")
 
-[node name="ColorPickers" type="Control" parent="UI" unique_id=1879345376]
+[node name="Layout" type="Control" parent="UI" unique_id=177083543]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Background" type="ColorRect" parent="UI/Layout" unique_id=1000852478]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 100.0
+color = Color(0.16078432, 0.15686275, 0.22745098, 1)
+
+[node name="Icon" type="TextureRect" parent="UI/Layout" unique_id=1323436831]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = 1002.0
+offset_top = 1.0
+offset_right = 1102.0
+offset_bottom = 101.0
+grow_horizontal = 0
+texture = ExtResource("6_jscy8")
+expand_mode = 1
+
+[node name="FPS" type="Label" parent="UI/Layout" unique_id=153225562]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 574.0
+offset_right = 55.0
+offset_bottom = 608.0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 24
+text = "FPS:"
+script = ExtResource("20_63tbu")
+
+[node name="Controls" type="Control" parent="UI" unique_id=201024432]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ColorPickers" type="Control" parent="UI/Controls" unique_id=1879345376]
 anchors_preset = 0
 offset_left = 11.0
 offset_top = 13.0
 offset_right = 51.0
 offset_bottom = 53.0
 
-[node name="Primary" type="ColorPickerButton" parent="UI/ColorPickers" unique_id=699014604]
+[node name="Primary" type="ColorPickerButton" parent="UI/Controls/ColorPickers" unique_id=699014604]
 layout_mode = 1
-offset_right = 51.0
+offset_left = 25.0
+offset_right = 76.0
 offset_bottom = 49.0
 icon_alignment = 1
 color = Color(0.49803922, 1, 0.49803922, 1)
 edit_alpha = false
 
-[node name="Secondary" type="ColorPickerButton" parent="UI/ColorPickers" unique_id=2105646582]
+[node name="Secondary" type="ColorPickerButton" parent="UI/Controls/ColorPickers" unique_id=2105646582]
 layout_mode = 0
-offset_left = 49.0
-offset_right = 100.0
+offset_left = 74.0
+offset_right = 125.0
 offset_bottom = 49.0
 icon_alignment = 1
 color = Color(0.49803922, 0.49803922, 1, 1)
 edit_alpha = false
 
-[node name="Label" type="Label" parent="UI" unique_id=953833827]
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -210.0
-offset_top = 9.0
-offset_right = -130.99915
-offset_bottom = 32.0
-grow_horizontal = 0
-text = "Brush size"
+[node name="CheckBox" type="CheckBox" parent="UI/Controls/ColorPickers" unique_id=1611942139]
+layout_mode = 0
+offset_top = 40.0
+offset_right = 230.0
+offset_bottom = 94.0
+text = "Double channel"
 
-[node name="SpinBox" type="SpinBox" parent="UI" unique_id=672386729 node_paths=PackedStringArray("cursor")]
-visible = false
+[node name="BrushSize" type="Control" parent="UI/Controls" unique_id=180123003]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="UI/Controls/BrushSize" unique_id=953833827]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -210.0
-offset_top = 39.105
-offset_right = -123.499146
-offset_bottom = 70.10502
+offset_left = 539.00085
+offset_top = 18.0
+offset_right = 703.0
+offset_bottom = 51.0
 grow_horizontal = 0
+text = "Brush size: "
+
+[node name="HSlider" type="HSlider" parent="UI/Controls/BrushSize" unique_id=698530868 node_paths=PackedStringArray("cursor", "label")]
+layout_mode = 0
+offset_left = 738.0
+offset_top = 23.0
+offset_right = 1036.0
+offset_bottom = 39.0
 min_value = 10.0
-max_value = 1000.0
-value = 10.0
+max_value = 200.0
+value = 50.0
 script = ExtResource("8_vxgas")
-cursor = NodePath("../Cursor")
+cursor = NodePath("../../../Cursor")
+label = NodePath("../Label")
 
-[node name="ScrollContainer" type="ScrollContainer" parent="UI" unique_id=323163515]
+[node name="Brushes" type="ScrollContainer" parent="UI/Controls" unique_id=323163515]
 layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -108.670044
-offset_bottom = 654.0
-grow_horizontal = 0
+offset_left = 212.00002
+offset_top = 8.0
+offset_right = 664.0
+offset_bottom = 123.0
+scale = Vector2(0.785, 0.785)
 horizontal_scroll_mode = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/ScrollContainer" unique_id=403044906]
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/Controls/Brushes" unique_id=580378343]
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
 
-[node name="Button" type="Button" parent="UI/ScrollContainer/VBoxContainer" unique_id=2144295100 node_paths=PackedStringArray("cursor")]
+[node name="Button" type="Button" parent="UI/Controls/Brushes/HBoxContainer" unique_id=2144295100 node_paths=PackedStringArray("cursor")]
 clip_contents = true
 layout_mode = 2
 icon = ExtResource("8_63kvh")
 script = ExtResource("9_6oc8a")
 brush_mask = SubResource("Image_yc10j")
-cursor = NodePath("../../../Cursor")
-brush_cursor = ExtResource("8_mp4i6")
+cursor = NodePath("../../../../Cursor")
+brush_cursor = ExtResource("9_y6deb")
 
-[node name="Button2" type="Button" parent="UI/ScrollContainer/VBoxContainer" unique_id=273933702 node_paths=PackedStringArray("cursor")]
+[node name="Button2" type="Button" parent="UI/Controls/Brushes/HBoxContainer" unique_id=273933702 node_paths=PackedStringArray("cursor")]
 clip_contents = true
 layout_mode = 2
 icon = ExtResource("9_nfndr")
 script = ExtResource("9_6oc8a")
 brush_mask = SubResource("Image_jscy8")
-cursor = NodePath("../../../Cursor")
-brush_cursor = ExtResource("15_kslj6")
+cursor = NodePath("../../../../Cursor")
+brush_cursor = ExtResource("11_og1vs")
 
-[node name="Button3" type="Button" parent="UI/ScrollContainer/VBoxContainer" unique_id=256333964 node_paths=PackedStringArray("cursor")]
-clip_contents = true
+[node name="Button3" type="Button" parent="UI/Controls/Brushes/HBoxContainer" unique_id=256333964 node_paths=PackedStringArray("cursor")]
 layout_mode = 2
 icon = ExtResource("10_ouh5r")
 script = ExtResource("9_6oc8a")
 brush_mask = SubResource("Image_pm3ni")
-cursor = NodePath("../../../Cursor")
-brush_cursor = ExtResource("10_ouh5r")
+cursor = NodePath("../../../../Cursor")
+brush_cursor = ExtResource("13_2wyq8")
 
-[node name="Button4" type="Button" parent="UI/ScrollContainer/VBoxContainer" unique_id=149061603 node_paths=PackedStringArray("cursor")]
-clip_contents = true
+[node name="Button4" type="Button" parent="UI/Controls/Brushes/HBoxContainer" unique_id=149061603 node_paths=PackedStringArray("cursor")]
 layout_mode = 2
 icon = ExtResource("11_ouh5r")
 script = ExtResource("9_6oc8a")
 brush_mask = SubResource("Image_y6deb")
-cursor = NodePath("../../../Cursor")
-brush_cursor = ExtResource("20_5w7x6")
+cursor = NodePath("../../../../Cursor")
+brush_cursor = ExtResource("15_vxglm")
 
-[node name="CheckBox" type="CheckBox" parent="UI" unique_id=1611942139]
+[node name="Exportar" type="Control" parent="UI/Controls" unique_id=61814901]
+anchors_preset = 0
+offset_left = 582.0
+offset_top = 51.0
+offset_right = 1019.0
+offset_bottom = 91.0
+
+[node name="MapaNormales" type="Button" parent="UI/Controls/Exportar" unique_id=488886126]
 layout_mode = 0
-offset_left = 119.0
-offset_top = 23.0
-offset_right = 349.0
-offset_bottom = 54.0
-text = "Double 
-channel"
+offset_left = 33.0
+offset_right = 191.0
+offset_bottom = 31.0
+text = "Export normal map"
 
-[node name="FPS" type="Label" parent="UI" unique_id=153225562]
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 8.0
-offset_top = -34.0
-offset_right = 55.0
-grow_vertical = 0
-theme_override_font_sizes/font_size = 24
-text = "FPS:"
-script = ExtResource("20_63tbu")
+[node name="Albedo" type="Button" parent="UI/Controls/Exportar" unique_id=352185928]
+layout_mode = 0
+offset_left = 244.0
+offset_right = 421.0
+offset_bottom = 31.0
+text = "Export albedo texture"
 
 [node name="Compute" type="Node" parent="." unique_id=1091607393]
 script = ExtResource("21_snk0p")
@@ -285,11 +333,11 @@ paint_mat = ExtResource("22_63tbu")
 script = ExtResource("22_u6i0i")
 texture = ExtResource("23_2hmkj")
 
-[connection signal="color_changed" from="UI/ColorPickers/Primary" to="Managers/PaintManager" method="_on_primary_color_changed"]
-[connection signal="color_changed" from="UI/ColorPickers/Secondary" to="Managers/PaintManager" method="_on_secondary_color_changed"]
-[connection signal="value_changed" from="UI/SpinBox" to="UI/SpinBox" method="resize_brush"]
-[connection signal="pressed" from="UI/ScrollContainer/VBoxContainer/Button" to="UI/ScrollContainer/VBoxContainer/Button" method="select_brush"]
-[connection signal="pressed" from="UI/ScrollContainer/VBoxContainer/Button2" to="UI/ScrollContainer/VBoxContainer/Button2" method="select_brush"]
-[connection signal="pressed" from="UI/ScrollContainer/VBoxContainer/Button3" to="UI/ScrollContainer/VBoxContainer/Button3" method="select_brush"]
-[connection signal="pressed" from="UI/ScrollContainer/VBoxContainer/Button4" to="UI/ScrollContainer/VBoxContainer/Button4" method="select_brush"]
-[connection signal="toggled" from="UI/CheckBox" to="Managers/PaintManager" method="_on_check_box_toggled"]
+[connection signal="color_changed" from="UI/Controls/ColorPickers/Primary" to="Managers/PaintManager" method="_on_primary_color_changed"]
+[connection signal="color_changed" from="UI/Controls/ColorPickers/Secondary" to="Managers/PaintManager" method="_on_secondary_color_changed"]
+[connection signal="toggled" from="UI/Controls/ColorPickers/CheckBox" to="Managers/PaintManager" method="_on_check_box_toggled"]
+[connection signal="value_changed" from="UI/Controls/BrushSize/HSlider" to="UI/Controls/BrushSize/HSlider" method="resize_brush"]
+[connection signal="pressed" from="UI/Controls/Brushes/HBoxContainer/Button" to="UI/Controls/Brushes/HBoxContainer/Button" method="select_brush"]
+[connection signal="pressed" from="UI/Controls/Brushes/HBoxContainer/Button2" to="UI/Controls/Brushes/HBoxContainer/Button2" method="select_brush"]
+[connection signal="pressed" from="UI/Controls/Brushes/HBoxContainer/Button3" to="UI/Controls/Brushes/HBoxContainer/Button3" method="select_brush"]
+[connection signal="pressed" from="UI/Controls/Brushes/HBoxContainer/Button4" to="UI/Controls/Brushes/HBoxContainer/Button4" method="select_brush"]

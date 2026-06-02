@@ -11,3 +11,5 @@ func select_brush() -> void:
 	
 	if cursor != null && brush_cursor != null && cursor.has_method("change_cursor"):
 		cursor.call("change_cursor", brush_cursor)
+	if cursor != null && cursor.has_method("resize_cursor"):
+		cursor.call("resize_cursor", Global.brush_size)

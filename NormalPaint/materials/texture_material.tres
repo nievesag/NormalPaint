@@ -1,7 +1,9 @@
 [gd_resource type="StandardMaterial3D" format=3 uid="uid://fq5grap05sps"]
 
 [ext_resource type="Texture2D" uid="uid://oiwbamt2mjtn" path="res://assets/textures/godot.png" id="1_m6a5e"]
+[ext_resource type="Texture2D" uid="uid://dghkffuh112" path="res://assets/textures/normals/8402-normal.png" id="2_m6a5e"]
 
 [resource]
 albedo_texture = ExtResource("1_m6a5e")
 normal_enabled = true
+normal_texture = ExtResource("2_m6a5e")
