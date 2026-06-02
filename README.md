@@ -19,7 +19,7 @@
 ## Vídeo
 https://github.com/user-attachments/assets/54578e5d-8cde-414e-b9f4-fe1b8194e8c1
 
-- [Vídeo demostrativo](https://youtu.be/z4m9Ax6AlzI?si=piZM3a6mlnGsQY7o)
+- [Vídeo extendido de demostración (2'24")](https://youtu.be/z4m9Ax6AlzI?si=piZM3a6mlnGsQY7o)
 
 ## Controles
 Ratón:
