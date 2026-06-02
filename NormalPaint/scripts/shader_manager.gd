@@ -11,6 +11,7 @@ extends Node3D
 var _working_normal_map: ImageTexture
 var _working_albedo_tex: ImageTexture
 
+@export var _compute_paint: Node
 
 func _ready() -> void:
 	if texture_material != null:
@@ -142,7 +143,7 @@ func paint_at_uv(uv: Vector2) -> void:
 	if _working_albedo_tex == null: return
 	_set_albedo(_working_albedo_tex)
 		
-#método para pintar la máscara de pincel actual en una posición uv de la textura dada con un color para la máscara
+#metodo para pintar la máscara de pincel actual en una posición uv de la textura dada con un color para la máscara
 func _paint_mask_in_image(texture: ImageTexture, uv: Vector2, color: Color) -> ImageTexture:
 	#programacion defensiva
 	if texture == null:
@@ -160,6 +161,10 @@ func _paint_mask_in_image(texture: ImageTexture, uv: Vector2, color: Color) -> I
 	if Global.brush_mask == null:
 		push_error("Mascara de pincel nula")
 		return texture
+
+	if _compute_paint != null and _compute_paint.has_method("_setup_compute"):
+		_compute_paint.call("_setup_compute", image, uv, color)
+		return
 
 	#tamaños de textura y de máscara
 	var w := image.get_width()

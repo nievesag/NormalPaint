@@ -111,7 +111,6 @@ func _cart2bary(p : Vector3, a : Vector3, b : Vector3, c: Vector3) -> Vector3:
 func _is_point_in_triangle(point, v1, v2, v3) -> Vector3:
 	var bc: Vector3 = _cart2bary(point, v1, v2, v3)
 	var sum: float = round(bc.x + bc.y + bc.z)
-#	print_debug("suma ", sum)
 	if (bc.x >= 0 && bc.x <= 1) && (bc.y >= 0 && bc.y <= 1) && (bc.z >= 0 && bc.z <= 1) && (sum == 1):
 		return bc
 	
@@ -153,9 +152,9 @@ func _raycast_uv(mouse_position: Vector2) -> void:
 		return
 						# si se da a algo
 	var pos: Vector3 = hit["position"]
-	var nor: Vector3 = hit["normal"]
-	var face: int = hit["face_index"]
-	var coll: Object = hit["collider"] # el objeto asociado a ese collider
+#	var nor: Vector3 = hit["normal"]
+#	var face: int = hit["face_index"]
+#	var coll: Object = hit["collider"] # el objeto asociado a ese collider
 	
 	if(_meshInstance == null):
 		print("mesh instance null")
@@ -187,54 +186,20 @@ func _raycast_uv(mouse_position: Vector2) -> void:
 			var uv1: Vector2 = mdt.get_vertex_uv(i1)
 			var uv2: Vector2 = mdt.get_vertex_uv(i2)
 			var uv_from_face: Vector2 = uv0 * bc.x + uv1 * bc.y + uv2 * bc.z
-			print("UV!!!!!!!!!! ", uv_from_face)
+			print("UV: ", uv_from_face)
 			
 #			draw_viewport.paint(uv_from_face, Global.foreground_color)
 			if _shader_manager != null and _shader_manager.has_method("paint_at_uv"):
 				_shader_manager.call("paint_at_uv", uv_from_face)
 			return
 	
-#	var uv: Vector2 = Vector2()
-#	var min_dist = INF # va guardando la distancia mas pequeña hasta el momento
-#	
-#	for i in range(0, _indices.size(), 3): # coge los indices de 3 en 3
-#		for j in range(3): # recorre cada uno de los 3 vertices de una cara
-#			var v = _indices[i + j] # coge el indice que estamos recorriendo del array de indices totales
-#			var v_world = _meshInstance.global_transform * _vertices[v] # posicion en el mundo
-#			var dist: float = to_global(pos).distance_to(v_world) # distancia entre el vertice que evaluo y la pos de colision del rayo
-#			
-#			if dist < min_dist: # si la nueva distancia calculada es menor que la ultima hasta ahora
-#				min_dist = dist # se sobreescribe
-#				uv = _uvs[v] # guardo la uv asociada a ese vertice
-#
-#	print("UV!!!!!!!!!!: ", uv)
-#	if _shader_manager != null and _shader_manager.has_method("paint_at_uv"):
-#		_shader_manager.call("paint_at_uv", uv)
-		
-#	var face: Array = _get_face_info(to_global(pos), to_global(nor))
-#	
-#	if !face:
-#		print("face null")
-#		return
-#
-#	var bc = face[2]
-#	
-#	var uv1: Vector2 = mdt.get_vertex_uv(_localFaceVertices[face[0]][0]) # vertice 0 de la cara
-#	var uv2: Vector2 = mdt.get_vertex_uv(_localFaceVertices[face[0]][1]) # vertice 1 de la cara
-#	var uv3: Vector2 = mdt.get_vertex_uv(_localFaceVertices[face[0]][2]) # vertice 2 de la cara
-#
-#	var uv = (uv1 * bc.x) + (uv2 * bc.y) + (uv3 * bc.z)
-	#print("!!!!!!!!!!! UV", uv)
-	
 func _on_primary_color_changed(color: Color) -> void:
 	Global.primary_color = color
 	pass
 
-
 func _on_secondary_color_changed(color: Color) -> void:
 	Global.secondary_color = color
 	pass # Replace with function body.
-
 
 func _on_check_box_toggled(toggled_on: bool) -> void:
 	Global.paint_both = toggled_on

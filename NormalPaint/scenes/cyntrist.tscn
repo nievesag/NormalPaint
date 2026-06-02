@@ -22,7 +22,6 @@
 [ext_resource type="Texture2D" uid="uid://bnlij0pmavdcs" path="res://assets/textures/normals/flat_normal_map.png" id="21_63tbu"]
 [ext_resource type="Script" uid="uid://dekg6xjeoogqt" path="res://scenes/compute_paint.gd" id="21_snk0p"]
 [ext_resource type="Script" uid="uid://cbwdv3pb5ub0b" path="res://scripts/draw_viewport.gd" id="22_2hmkj"]
-[ext_resource type="Image" uid="uid://pa0j7iux2yrp" path="res://assets/textures/normals/sphere_normal_map.png" id="22_7rgns"]
 [ext_resource type="Material" uid="uid://d4aklslum76v1" path="res://materials/paintable_material.tres" id="22_63tbu"]
 [ext_resource type="Script" uid="uid://dj4nj5yx7orls" path="res://scripts/brush.gd" id="22_u6i0i"]
 [ext_resource type="Texture2D" uid="uid://dljft2okay16e" path="res://assets/textures/brush_prueba.png" id="23_2hmkj"]
@@ -46,11 +45,12 @@ _primary_colorpicker = NodePath("../../UI/ColorPickers/Primary")
 _secondary_colorpicker = NodePath("../../UI/ColorPickers/Secondary")
 default_brush_mask = ExtResource("9_2bale")
 
-[node name="ShaderManager" type="Node3D" parent="Managers" unique_id=925348982 node_paths=PackedStringArray("subject")]
+[node name="ShaderManager" type="Node3D" parent="Managers" unique_id=925348982 node_paths=PackedStringArray("subject", "_compute_paint")]
 script = ExtResource("2_k55y0")
 subject = NodePath("../../Geometría/Meshes/StaticBody3D/MeshInstance3D")
 texture_material = ExtResource("3_j4ag4")
 normal_material = ExtResource("1_rib1n")
+_compute_paint = NodePath("../../Compute")
 
 [node name="Geometría" type="Node3D" parent="." unique_id=1189026551]
 
@@ -222,8 +222,6 @@ text = "Pintado en ambos canales"
 
 [node name="Compute" type="Node" parent="." unique_id=1091607393]
 script = ExtResource("21_snk0p")
-image_n = ExtResource("9_2bale")
-image_total = ExtResource("22_7rgns")
 
 [node name="OutputSprite2D" type="Sprite2D" parent="Compute" unique_id=1710879059]
 position = Vector2(263, 358.99997)
