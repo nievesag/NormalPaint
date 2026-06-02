@@ -81,9 +81,9 @@ func setup_compute(texture: Image, uv: Vector2, color: Color) -> Texture2D:
 
 	var texture_rid: RID = rd.texture_create(texture_format, texture_view, [texture.get_data()])
 	
-	return _compute(storage_buffer, storage_buffer_1, mask_rid, texture_rid, texture.get_width(), texture.get_height())
+	return _compute(storage_buffer, storage_buffer_1, mask_rid, texture_rid, diameter)
 
-func _compute(storage_buffer: RID, storage_buffer_1: RID, texture: RID, texture_1: RID, texture_w: float, texture_h: float) -> Texture2D:
+func _compute(storage_buffer: RID, storage_buffer_1: RID, texture: RID, texture_1: RID, diameter: float) -> Texture2D:
 	var parameter_uniform := RDUniform.new()
 	parameter_uniform.uniform_type = RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER
 	parameter_uniform.binding = 0
@@ -109,7 +109,9 @@ func _compute(storage_buffer: RID, storage_buffer_1: RID, texture: RID, texture_
 
 	rd.compute_list_bind_compute_pipeline(compute_list, pipeline)
 	rd.compute_list_bind_uniform_set(compute_list, uniform_set, 0)
-	rd.compute_list_dispatch(compute_list, int(ceil(texture_h / 8.0)), int(ceil(texture_w / 8.0)), 1) # ejecuta el shader, settea el num de work groups
+	var groups_x := int(ceil(diameter / 32.0))
+	var groups_y := int(ceil(diameter / 32.0))
+	rd.compute_list_dispatch(compute_list, groups_x, groups_y, 1)
 	rd.compute_list_end()
 	
 	var texture_rd := Texture2DRD.new()
