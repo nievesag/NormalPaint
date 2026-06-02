@@ -10,6 +10,9 @@ var _cached_mask_id: int = -1
 
 func _ready():
 	rd = RenderingServer.get_rendering_device()
+	if rd == null:
+		push_warning("No hay RenderingDevice disponible; el pintado por compute quedara desactivado.")
+		return
 	print("Acelerador usado: " + rd.get_device_name())
 
 	# carga shader
