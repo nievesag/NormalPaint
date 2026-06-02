@@ -91,22 +91,6 @@ assets
 ### Estructura de las escenas
 Hay una única escena en el prototipo donde se podrán realizar todas las acciones: [main.tscn](https://github.com/nievesag/NormalPaint/blob/main/NormalPaint/assets/scenes/main.tscn)
 
-#### Flujo principal de pintado
-```mermaid
-flowchart LR
-    UI[UI: pinceles, colores, tamaño y exportación] --> PM[PaintManager]
-    CAM[Camera3D] --> PM
-    MESH[MeshInstance3D] --> PM
-    PM -->|UV por raycast| SM[ShaderManager]
-    SM -->|elige vista| MAT[Material activo]
-    SM --> CMP[Compute]
-    CMP -->|modifica| ALB[Textura albedo]
-    CMP -->|modifica| NRM[Mapa de normales]
-    ALB --> MAT
-    NRM --> MAT
-    MAT --> REN[Render final]
-```
-
 ## Planteamiento del proyecto
 Las características principales del prototipo son:
 
@@ -122,6 +106,22 @@ Las características principales del prototipo son:
 
 ## Implementación
 La implementación del prototipo ha abarcado, principalmente, cuatro retos: el procesado del input de un usuario, actualizar una textura según ese input procesado, gestionar las diferentes capas, y optimizar el pintado.
+
+#### Flujo principal de pintado
+```mermaid
+flowchart LR
+    UI[UI: pinceles, colores, tamaño y exportación] --> PM[PaintManager]
+    CAM[Camera3D] --> PM
+    MESH[MeshInstance3D] --> PM
+    PM -->|UV por raycast| SM[ShaderManager]
+    SM -->|elige vista| MAT[Material activo]
+    SM --> CMP[Compute]
+    CMP -->|modifica| ALB[Textura albedo]
+    CMP -->|modifica| NRM[Mapa de normales]
+    ALB --> MAT
+    NRM --> MAT
+    MAT --> REN[Render final]
+```
 
 ### 1. Procesamiento del input y obtención de UVs
 El hecho de pintar sobre un modelo implica pintar sobre la textura que le envuelve, que es la que define cómo se ve, entonces, cuando un usuario se dispone a pintar sobre un modelo, hace clic y efectúa un trazo, surge la pregunta: ¿cómo sabemos exactamente en qué punto de la textura debemos pintar, de manera interna?
