@@ -1,4 +1,5 @@
 # NormalPaint
+![LOGO](https://github.com/nievesag/NormalPaint/blob/main/docs/LOGO.png)
 
 ## Índice
 1. [Vídeo](#vídeo)
