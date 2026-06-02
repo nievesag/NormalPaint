@@ -8,8 +8,8 @@ extends Node3D
 @export_category("Texturas")
 @export var default_normal_map: Image
 @export var texture_size := Vector2i(1024, 1024)
-var _working_normal_map: ImageTexture
-var _working_albedo_tex: ImageTexture
+var _working_normal_map: Texture2D
+var _working_albedo_tex: Texture2D
 
 @export var _compute_paint: Node
 
@@ -37,7 +37,7 @@ func _apply_current_material() -> void:
 		print_debug("NO HAY SUJETO ASIGNADO EN SHADER MANAGER")
 		return
 
-	var material := normal_material as Material if Global.showing_normals else texture_material # el que toque
+	var material: Material = normal_material as Material if Global.showing_normals else texture_material
 	if material == null:
 		print_debug("NO HAY MATERIAL VALIDO ASIGNADO EN SHADER MANAGER")
 		return
@@ -46,40 +46,23 @@ func _apply_current_material() -> void:
 	subject.mesh.surface_set_material(0, material)
 
 #metodo para recibir el mapa de normales del material de textura
-func _get_normal_map() -> ImageTexture:
+func _get_normal_map() -> Texture2D:
 	#programacion defensiva
 	if texture_material == null:
 		push_error("texture_material no asignado")
 		return null
 
-	#buscamos el mapa de normales en el material de textura
-	var normal_tex := texture_material.get_texture(BaseMaterial3D.TEXTURE_NORMAL)
-	var normal_map: ImageTexture = null
-	if normal_tex is ImageTexture:
-		normal_map = normal_tex as ImageTexture
-	elif normal_tex != null:
-		var normal_image := normal_tex.get_image()
-		if normal_image != null:
-			if normal_image.is_compressed():
-				normal_image.decompress()
-			if normal_image.get_format() != Image.FORMAT_RGBA8:
-				normal_image.convert(Image.FORMAT_RGBA8)
-			normal_map = ImageTexture.create_from_image(normal_image)
-			_set_normal_map(normal_map)
+	var normal_tex: Texture2D = texture_material.get_texture(BaseMaterial3D.TEXTURE_NORMAL)
+	if normal_tex != null:
+		return normal_tex
 
-	if normal_map == null:
-		print_debug("La mesh no tiene normal map, creandolo")
-		if default_normal_map == null: # si no existe ni la textura default se crea una
-			default_normal_map = Image.create(texture_size.x, texture_size.y, false, Image.FORMAT_RGBA8)
-			default_normal_map.fill(Color(0.5, 0.5, 1.0, 1.0))
-		normal_map = ImageTexture.create_from_image(default_normal_map) # textura por defecto
-		_set_normal_map(normal_map)
+	print_debug("La mesh no tiene normal map, creandolo")
+	if default_normal_map == null:
+		default_normal_map = Image.create(texture_size.x, texture_size.y, false, Image.FORMAT_RGBA8)
+		default_normal_map.fill(Color(0.5, 0.5, 1.0, 1.0))
+	return ImageTexture.create_from_image(default_normal_map)
 
-	return normal_map
-
-#metodo para setear el mapa de normales a ambos materiales
-func _set_normal_map(tex: ImageTexture) -> void:
-	#programacion defensiva
+func _set_normal_map(tex: Texture2D) -> void:
 	if tex == null:
 		push_error("Se esta intentando aplicar un normal map nulo")
 		return
@@ -92,24 +75,13 @@ func _set_normal_map(tex: ImageTexture) -> void:
 	if normal_material != null:
 		normal_material.set_shader_parameter("normal_tex", tex)
 		normal_material.set_shader_parameter("albedo_texture", tex)
-		
-func _get_albedo() -> ImageTexture:
+
+func _get_albedo() -> Texture2D:
 	if texture_material == null:
-		return
-	var albedo_tex := texture_material.get_texture(BaseMaterial3D.TEXTURE_ALBEDO)
-	if albedo_tex == null:
 		return null
-	if albedo_tex is ImageTexture:
-		return albedo_tex as ImageTexture
+	return texture_material.get_texture(BaseMaterial3D.TEXTURE_ALBEDO)
 
-	var image := albedo_tex.get_image()
-	if image == null:
-		return null
-	if image.is_compressed():
-		image.decompress()
-	return ImageTexture.create_from_image(image)
-
-func _set_albedo(tex: ImageTexture) -> void:
+func _set_albedo(tex: Texture2D) -> void:
 	#programacion defensiva
 	if tex == null:
 		push_error("Se esta intentando aplicar una textura nula")
@@ -144,7 +116,7 @@ func paint_at_uv(uv: Vector2) -> void:
 	_set_albedo(_working_albedo_tex)
 		
 #metodo para pintar la máscara de pincel actual en una posición uv de la textura dada con un color para la máscara
-func _paint_mask_in_image(texture: ImageTexture, uv: Vector2, color: Color) -> ImageTexture:
+func _paint_mask_in_image(texture: Texture2D, uv: Vector2, color: Color) -> Texture2D:
 	#programacion defensiva
 	if texture == null:
 		push_error("Imposible pintar en textura nula")
@@ -157,6 +129,8 @@ func _paint_mask_in_image(texture: ImageTexture, uv: Vector2, color: Color) -> I
 	
 	if image.is_compressed():
 		image.decompress()
+	if image.get_format() != Image.FORMAT_RGBA8:
+		image.convert(Image.FORMAT_RGBA8)
 
 	if Global.brush_mask == null:
 		push_error("Mascara de pincel nula")
