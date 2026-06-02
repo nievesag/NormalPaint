@@ -1,0 +1,14 @@
+[remap]
+
+importer="image"
+type="Image"
+uid="uid://cu0ivodbwqkcv"
+path="res://.godot/imported/none.png-1aa5fff53ce3fc7163ce0972340333c1.image"
+
+[deps]
+
+source_file="res://assets/textures/brushes/none.png"
+dest_files=["res://.godot/imported/none.png-1aa5fff53ce3fc7163ce0972340333c1.image"]
+
+[params]
+
