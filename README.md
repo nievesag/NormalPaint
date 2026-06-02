@@ -1,6 +1,8 @@
 # NormalPaint
 
 ## Índice
+1. [Vídeo](#vídeo)
+1. [Controles](#controles)
 1. [Autoras](#autoras)
 2. [Resumen](#resumen)
 3. [Instalación y uso](#instalación-y-uso)
@@ -8,14 +10,18 @@
 5. [Planteamiento del proyecto](#planteamiento-del-proyecto)
 6. [Estructura](#estructura)
 7. [Implementación](#implementación)
-8. [Pruebas y métricas](#pruebas-y-métricas)
+8. [Métricas](#métricas)
 9. [Conclusiones](#conclusiones)
 9. [Ampliaciones](#ampliaciones)
 10. [Licencia](#licencia)
 11. [Referencias](#referencias)
 
-### Vídeo
+## Vídeo
 - [Vídeo demostración]()
+
+## Controles
+
+TODO.
 
 ## Autoras
 - Nieves Alonso Gilsanz [@nievesag](https://github.com/nievesag)
@@ -28,7 +34,7 @@ El proyecto consiste en una aplicación de pintura en 3D en tiempo real donde se
 Todo el contenido del proyecto está disponible en este repositorio, con **Godot Engine v4.6.2.** o posterior siendo capaces de bajar todos los recursos necesarios y editar el proyecto.
 
 ## Introducción
-Este proyecto corresponde a la práctica final de la asignatura de Iluminación y Materiales del Grado en Desarrollo de Videojuegos de la UCM del curso 2025-2026. Este prototipo sirve para poner en práctica los conocimientos de la asignatura a través de su exploración de los mapas de normales, el procesado de texturas y materiales en motores actuales y la programación de shaders de cómputo en GPU.
+Este proyecto corresponde a la práctica final de la asignatura de Iluminación y Materiales del Grado en Desarrollo de Videojuegos de la UCM del curso 2025-2026. Este prototipo sirve para poner en práctica los conocimientos de la asignatura a través de su exploración de los mapas de normales, el procesado de texturas y materiales en motores actuales y la programación de sombreadores de cómputo en GPU.
 
 ## Estructura
 ### Estructura del proyecto
@@ -259,8 +265,7 @@ ivec2 local = ivec2(gl_GlobalInvocationID.xy);
 ![WORK](https://github.com/nievesag/NormalPaint/blob/main/docs/work.png)
 El resto del código se basa en la versión de CPU y lo adapta a la paralelización con el shader basándose en este criterio.
 
-## Pruebas y métricas
-### Métricas tomadas
+## Métricas
 
 En un PC de estas características:
 - **CPU:** Intel Core i5-12600KF a 3.70 GHz
@@ -277,6 +282,16 @@ Este proyecto nos ha permitido integrar en un único lugar varias piezas que, po
 
 El resultado es un prototipo de herramienta funcional que sirve de demostración técnica tanto del pintado sobre albedo y mapas de normales resoluble de forma interactiva y con una estructura razonablemente modular, como del efecto pintoresco jugando con la iluminación de un modelo a través de la combinación del mapa de normales y la textura de su material.
 
+## Ampliaciones
+A falta de tiempo, las siguientes tareas planeadas que se han quedado como posibles ampliaciones han sido:
+
+* Importación de modelos y texturas del usuario.
+* Trazado de líneas.
+* Sistema de deshacer / rehacer pinceladas.
+* Pinceladas a través proyección de la silueta del cursor sobre el modelo.
+* Atajos de teclado.
+* Soporte real de opacidad y fuerza del pincel.
+
 ## Licencia
 Nieves Alonso Gilsanz y Cynthia Tristán Álvarez, autoras de la documentación, código y recursos de este trabajo, concedemos permiso permanente para utilizar este material, con fines educativos o de investigación; ya sea para obtener datos agregados de forma anónima como para utilizarlo total o parcialmente reconociendo expresamente nuestra autoría.
 
@@ -284,6 +299,10 @@ Nieves Alonso Gilsanz y Cynthia Tristán Álvarez, autoras de la documentación,
 A continuación se detallan todas las referencias bibliográficas, o de otro tipo utilizdas para realizar este prototipo. Los recursos de terceros que se han utilizados son de uso público.[^1][^2][^3][^4][^5][^6][^7][^8][^9][^10][^11][^12][^13]
 
 El vídeo de Cody Gindy[^1] es el que ha servido de inspiración principal e idea para el proyecto de lograr un efecto de tipo pintura en un modelo a través del pintado a mano del mapa de normales principalmente, y también de la textura de albedo.
+
+TODO.
+
+El modelo que se ha usado para la carga y demostración ha sido proporcionado por *Dizzy Engine*[^13].
 
 [^1]: Cody Gindy. [*Making 3D animation look painterly (it's easier than you think)*](https://www.youtube.com/watch?v=s8N00rjil_4). Cody Gindy. Youtube. 2023.
 
@@ -309,4 +328,4 @@ El vídeo de Cody Gindy[^1] es el que ha servido de inspiración principal e ide
 
 [^12]: OpenGL 4.6 Reference Pages. [*OpenGL 4.6 Reference Pages*](https://registry.khronos.org/OpenGL-Refpages/gl4/).
 
-[^13]: Qazan, K. [*The thinker 3D Model*](https://sketchfab.com/3d-models/the-thinker-27339621613d4d55a61d9e58bd6ef908). 2023.
+[^13]: Dizzy Engine. [*Sea Captain Hat*](https://sketchfab.com/3d-models/sea-captain-hat-b8ef6610b4fa4a7cb6df3232c836349c). 2023.
