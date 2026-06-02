@@ -57,9 +57,12 @@ func _ready() -> void:
 	_indices = arrays[Mesh.ARRAY_INDEX]
 	
 	# saco en arraymesh del mesh de la meshinstance para poder pasarselo a create_from_surface
-	var arrMesh: ArrayMesh = ArrayMesh.new()
-	arrMesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, mesh.get_mesh_arrays())
-	
+
+	var arrMesh := mesh as ArrayMesh
+	if arrMesh == null:
+		print_debug("LA MESH DE LA MESHINSTANCE3D NO ES UN ARRAYMESH VALIDO")
+		return
+
 	mdt.create_from_surface(arrMesh, 0) # rellena la info del meshdatatool con la data de la mesh especificada
 	_numFaces = mdt.get_face_count()
 	_worldNormals.resize(_numFaces) # mismo numero de normales que de caras
