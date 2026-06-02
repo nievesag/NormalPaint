@@ -68,7 +68,7 @@ Los recursos que conforman el proyecto están organizados de esta forma:
 * **Textures**. Imágenes importadas como texturas utilizadas en interfaces, máscaras de pincel y texturas.
 * **Themes**. Temas de la UI.
 * **Scripts**. Todas las clases con el código del proyecto.
- * **Autoloads**. Scripts singletons.
+  * **Autoloads**. Scripts singletons.
 
 #### Jerarquía de recursos
 ```text
