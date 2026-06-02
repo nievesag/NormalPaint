@@ -24,7 +24,6 @@
 [ext_resource type="Script" uid="uid://cbwdv3pb5ub0b" path="res://scripts/draw_viewport.gd" id="22_2hmkj"]
 [ext_resource type="Material" uid="uid://d4aklslum76v1" path="res://assets/materials/paintable_material.tres" id="22_63tbu"]
 [ext_resource type="Script" uid="uid://dj4nj5yx7orls" path="res://scripts/brush.gd" id="22_u6i0i"]
-[ext_resource type="Texture2D" uid="uid://dljft2okay16e" path="res://assets/textures/brush_prueba.png" id="23_2hmkj"]
 
 [sub_resource type="Image" id="Image_yc10j"]
 data = {
@@ -365,7 +364,7 @@ paint_mat = ExtResource("22_63tbu")
 
 [node name="Brush" type="Node2D" parent="DrawViewport" unique_id=841120591]
 script = ExtResource("22_u6i0i")
-texture = ExtResource("23_2hmkj")
+texture = ExtResource("8_63kvh")
 
 [connection signal="color_changed" from="UI/Controls/ColorPickers/Primary" to="Managers/PaintManager" method="_on_primary_color_changed"]
 [connection signal="color_changed" from="UI/Controls/ColorPickers/Secondary" to="Managers/PaintManager" method="_on_secondary_color_changed"]
