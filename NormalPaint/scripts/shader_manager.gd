@@ -163,9 +163,17 @@ func _paint_mask_in_image(texture: ImageTexture, uv: Vector2, color: Color) -> I
 		return texture
 		
 	if _compute_paint != null and _compute_paint.has_method("setup_compute"):
-		_compute_paint.call("setup_compute", image, uv, color)
-		return
-
+		var computed_variant: Variant = _compute_paint.call("setup_compute", image, uv, color)
+		if computed_variant is Texture2D:
+			var computed_texture := computed_variant as Texture2D
+			var computed_image := computed_texture.get_image()
+			if computed_image.is_compressed():
+				computed_image.decompress()
+			if computed_image.get_format() != Image.FORMAT_RGBA8:
+				computed_image.convert(Image.FORMAT_RGBA8)
+			return ImageTexture.create_from_image(computed_image)
+		return null
+	return null
 #	#tamaños de textura y de máscara
 #	var w := image.get_width()
 #	var h := image.get_height()
